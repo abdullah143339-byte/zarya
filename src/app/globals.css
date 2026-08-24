@@ -517,6 +517,71 @@ html.dark .chat-canvas {
 }
 
 /* ============================================
+   LANDING — CINEMATIC ATMOSPHERE SYSTEM
+   GPU-friendly: transform/opacity only.
+   ============================================ */
+
+@keyframes atmo-drift-a {
+  0%, 100% { transform: translate3d(-5%, -3%, 0) scale(1); }
+  50% { transform: translate3d(4%, 4%, 0) scale(1.1); }
+}
+
+@keyframes atmo-drift-b {
+  0%, 100% { transform: translate3d(4%, 3%, 0) scale(1.05); }
+  50% { transform: translate3d(-4%, -4%, 0) scale(0.95); }
+}
+
+@keyframes atmo-drift-c {
+  0%, 100% { transform: translate3d(-3%, 2%, 0) scale(1); }
+  50% { transform: translate3d(3%, -3%, 0) scale(1.12); }
+}
+
+.atmo-layer {
+  position: absolute;
+  inset: -25%;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.atmo-blob-a { animation: atmo-drift-a 52s ease-in-out infinite; }
+.atmo-blob-b { animation: atmo-drift-b 64s ease-in-out infinite; }
+.atmo-blob-c { animation: atmo-drift-c 76s ease-in-out infinite; }
+
+.atmo-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.atmo-vignette {
+  background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+@keyframes scroll-cue-dot {
+  0% { transform: translateY(0); opacity: 0; }
+  25% { opacity: 1; }
+  85% { opacity: 0; }
+  100% { transform: translateY(18px); opacity: 0; }
+}
+
+.scroll-cue-dot {
+  animation: scroll-cue-dot 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atmo-blob-a,
+  .atmo-blob-b,
+  .atmo-blob-c,
+  .scroll-cue-dot {
+    animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .atmo-blob-c {
+    display: none;
+  }
+}
+
+/* ============================================
    UTILITIES
    ============================================ */
 
