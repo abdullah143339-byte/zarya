@@ -1,7 +1,13 @@
-import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
 const RATE_LIMIT_STORE = new Map<string, { count: number; resetAt: number }>();
+
+// Tight burst limiter specifically for authentication endpoints.  This only
+// slows down rapid-fire request floods; the durable 10-failure / 15-minute
+// hard lock is enforced in LoginThrottleService inside auth.service.login().
+const AUTH_BURST_MAX = 20;
+const AUTH_BURST_WINDOW_MS = 60 * 1000;
 
 @Injectable()
 export class SecurityMiddleware implements NestMiddleware {
@@ -38,8 +44,10 @@ export class SecurityMiddleware implements NestMiddleware {
       }
     }
 
-    // Strict auth rate limiting — covers login, register, password reset and
-    // 2FA verification to prevent brute-force of 6-digit codes.
+    // Burst limiter for authentication endpoints.  The durable 10-failed /
+    // 15-minute hard lock is handled in LoginThrottleService; this window
+    // just prevents an attacker from sending an unlimited stream of login
+    // requests in a very short time (e.g. many per second).
     const authPaths = [
       '/auth/login',
       '/auth/register',
@@ -50,18 +58,21 @@ export class SecurityMiddleware implements NestMiddleware {
     ];
     const isAuthPath = authPaths.some((p) => req.path.includes(p));
     if (isAuthPath) {
-      const authKey = `auth:${ip}`;
-      const authRecord = RATE_LIMIT_STORE.get(authKey);
+      const burstKey = `authburst:${ip}`;
+      const burst = RATE_LIMIT_STORE.get(burstKey);
 
-      if (!authRecord || now > authRecord.resetAt) {
-        RATE_LIMIT_STORE.set(authKey, { count: 1, resetAt: now + 15 * 60 * 1000 }); // 15 min window
+      if (!burst || now > burst.resetAt) {
+        RATE_LIMIT_STORE.set(burstKey, { count: 1, resetAt: now + AUTH_BURST_WINDOW_MS });
       } else {
-        authRecord.count++;
-        if (authRecord.count > 10) {
-          res.setHeader('Retry-After', Math.ceil((authRecord.resetAt - now) / 1000));
+        burst.count++;
+        if (burst.count > AUTH_BURST_MAX) {
+          res.setHeader('Retry-After', Math.ceil((burst.resetAt - now) / 1000));
           res.status(429).json({
             success: false,
-            error: { message: 'Too many auth attempts. Try again in 15 minutes.', statusCode: 429 },
+            error: {
+              message: 'Too many auth attempts. Please wait a moment and try again.',
+              statusCode: 429,
+            },
           });
           return;
         }

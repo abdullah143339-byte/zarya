@@ -99,4 +99,10 @@ export class PostsController {
   async reportPost(@CurrentUser('id') userId: string, @Param('id') postId: string, @Body() body: any) {
     return ApiResponseDto.ok(await this.postsService.reportPost(userId, postId, body?.reason || 'OTHER', body?.description), 'Post reported');
   }
+
+  @Post(':id/view')
+  @UseGuards(OptionalJwtAuthGuard)
+  async recordView(@Param('id') postId: string) {
+    return ApiResponseDto.ok(await this.postsService.recordView(postId), 'View recorded');
+  }
 }

@@ -20,9 +20,9 @@ export class AiRouterService {
   private readonly logger = new Logger(AiRouterService.name);
 
   private readonly providerCatalog: Record<string, { model: string; capabilities: string[] }> = {
-    groq: { model: 'mixtral-8x7b-32768', capabilities: ['text-generation', 'qa', 'analysis', 'code'] },
-    gemini: { model: 'gemini-2.0-flash-exp', capabilities: ['text-generation', 'translation', 'language-detection', 'deep-search'] },
-    openrouter: { model: 'mistralai/mistral-7b-instruct', capabilities: ['text-generation', 'code'] },
+    groq: { model: 'allam-2-7b', capabilities: ['text-generation', 'qa', 'analysis', 'code'] },
+    gemini: { model: 'gemini-2.5-flash', capabilities: ['text-generation', 'translation', 'language-detection', 'deep-search'] },
+    openrouter: { model: 'meta-llama/llama-3.3-70b-instruct', capabilities: ['text-generation', 'code'] },
     deepseek: { model: 'deepseek-chat', capabilities: ['text-generation', 'code'] },
     mistral: { model: 'mistral-small-latest', capabilities: ['text-generation', 'translation', 'code'] },
     fal: { model: 'fal-ai/flux/dev', capabilities: ['image-generation'] },

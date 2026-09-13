@@ -18,21 +18,21 @@ export class ProviderFallbackService {
 
   getChatProviders(): FallbackProvider[] {
     return [
-      { name: 'groq', key: 'GROQ_API_KEY', check: () => !!this.config.get('GROQ_API_KEY') },
       { name: 'gemini', key: 'GEMINI_API_KEY', check: () => !!this.config.get('GEMINI_API_KEY') },
+      { name: 'groq', key: 'GROQ_API_KEY', check: () => !!this.config.get('GROQ_API_KEY') },
       { name: 'openrouter', key: 'OPENROUTER_API_KEY', check: () => !!this.config.get('OPENROUTER_API_KEY') },
-      { name: 'deepseek', key: 'DEEPSEEK_API_KEY', check: () => !!this.config.get('DEEPSEEK_API_KEY') },
       { name: 'mistral', key: 'MISTRAL_API_KEY', check: () => !!this.config.get('MISTRAL_API_KEY') },
+      { name: 'deepseek', key: 'DEEPSEEK_API_KEY', check: () => !!this.config.get('DEEPSEEK_API_KEY') },
     ];
   }
 
   getCodeProviders(): FallbackProvider[] {
     return [
-      { name: 'groq', key: 'GROQ_API_KEY', check: () => !!this.config.get('GROQ_API_KEY') },
       { name: 'gemini', key: 'GEMINI_API_KEY', check: () => !!this.config.get('GEMINI_API_KEY') },
+      { name: 'groq', key: 'GROQ_API_KEY', check: () => !!this.config.get('GROQ_API_KEY') },
       { name: 'openrouter', key: 'OPENROUTER_API_KEY', check: () => !!this.config.get('OPENROUTER_API_KEY') },
-      { name: 'deepseek', key: 'DEEPSEEK_API_KEY', check: () => !!this.config.get('DEEPSEEK_API_KEY') },
       { name: 'mistral', key: 'MISTRAL_API_KEY', check: () => !!this.config.get('MISTRAL_API_KEY') },
+      { name: 'deepseek', key: 'DEEPSEEK_API_KEY', check: () => !!this.config.get('DEEPSEEK_API_KEY') },
     ];
   }
 
@@ -41,8 +41,8 @@ export class ProviderFallbackService {
       { name: 'gemini', key: 'GEMINI_API_KEY', check: () => !!this.config.get('GEMINI_API_KEY') },
       { name: 'groq', key: 'GROQ_API_KEY', check: () => !!this.config.get('GROQ_API_KEY') },
       { name: 'openrouter', key: 'OPENROUTER_API_KEY', check: () => !!this.config.get('OPENROUTER_API_KEY') },
-      { name: 'deepseek', key: 'DEEPSEEK_API_KEY', check: () => !!this.config.get('DEEPSEEK_API_KEY') },
       { name: 'mistral', key: 'MISTRAL_API_KEY', check: () => !!this.config.get('MISTRAL_API_KEY') },
+      { name: 'deepseek', key: 'DEEPSEEK_API_KEY', check: () => !!this.config.get('DEEPSEEK_API_KEY') },
     ];
   }
 
@@ -51,8 +51,8 @@ export class ProviderFallbackService {
       { name: 'gemini', key: 'GEMINI_API_KEY', check: () => !!this.config.get('GEMINI_API_KEY') },
       { name: 'groq', key: 'GROQ_API_KEY', check: () => !!this.config.get('GROQ_API_KEY') },
       { name: 'openrouter', key: 'OPENROUTER_API_KEY', check: () => !!this.config.get('OPENROUTER_API_KEY') },
-      { name: 'deepseek', key: 'DEEPSEEK_API_KEY', check: () => !!this.config.get('DEEPSEEK_API_KEY') },
       { name: 'mistral', key: 'MISTRAL_API_KEY', check: () => !!this.config.get('MISTRAL_API_KEY') },
+      { name: 'deepseek', key: 'DEEPSEEK_API_KEY', check: () => !!this.config.get('DEEPSEEK_API_KEY') },
     ];
   }
 
@@ -110,8 +110,12 @@ export class ProviderFallbackService {
         const status = err?.response?.status || err?.status || 0;
         const isRateLimit = status === 429 || status === 503 || (err.message && (err.message.includes('rate limit') || err.message.includes('quota') || err.message.includes('429') || err.message.includes('exhausted')));
         const isAuthError = status === 401 || status === 403;
+        const isInsufficientBalance = status === 402 || (err.message && err.message.toLowerCase().includes('insufficient balance'));
 
-        if (isRateLimit) {
+        if (isInsufficientBalance) {
+          this.logger.warn(`Provider ${provider.name} insufficient balance, exhausting for 1h`);
+          this.exhaustProvider(provider.name, 3600000);
+        } else if (isRateLimit) {
           this.logger.warn(`Provider ${provider.name} rate limited, exhausting for 60s`);
           this.exhaustProvider(provider.name, 60000);
         } else if (isAuthError) {

@@ -21,7 +21,7 @@ export class CodeProvider {
         this.fallback.getCodeProviders(),
         {
           groq: () => this.ai.groqCode(options.prompt, lang),
-          gemini: () => this.ai.geminiGenerate(`Generate ${lang} code for: ${options.prompt}. Task: ${options.task}. Only output the code with brief explanation.`, 'gemini-2.0-flash-exp'),
+          gemini: () => this.ai.geminiGenerate(`Generate ${lang} code for: ${options.prompt}. Task: ${options.task}. Only output the code with brief explanation.`, 'gemini-2.5-flash'),
           openrouter: () => this.ai.openRouterCode(options.prompt, lang),
           deepseek: () => this.ai.deepSeekCode(options.prompt, lang),
           mistral: () => this.ai.mistralCode(options.prompt, lang),
@@ -35,10 +35,10 @@ export class CodeProvider {
 
     let modelName = '';
     switch (provider) {
-      case 'groq': modelName = 'llama-3.1-70b-versatile'; break;
-      case 'gemini': modelName = 'gemini-2.0-flash-exp'; break;
-      case 'openrouter': modelName = 'openai/gpt-3.5-turbo'; break;
-      case 'deepseek': modelName = 'deepseek-coder'; break;
+      case 'groq': modelName = 'allam-2-7b'; break;
+      case 'gemini': modelName = 'gemini-2.5-flash'; break;
+      case 'openrouter': modelName = 'meta-llama/llama-3.3-70b-instruct'; break;
+      case 'deepseek': modelName = 'deepseek-chat'; break;
       case 'mistral': modelName = 'codestral-latest'; break;
     }
 

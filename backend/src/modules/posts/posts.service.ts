@@ -205,6 +205,13 @@ export class PostsService {
     return post;
   }
 
+  async recordView(postId: string) {
+    const post = await this.prisma.post.findUnique({ where: { id: postId }, select: { id: true, deletedAt: true } });
+    if (!post || post.deletedAt) throw new NotFoundException('Post not found');
+    await this.prisma.post.update({ where: { id: postId }, data: { viewCount: { increment: 1 } } });
+    return { viewRecorded: true };
+  }
+
   async delete(postId: string, userId: string) {
     const post = await this.prisma.post.findUnique({ where: { id: postId } });
     if (!post) throw new NotFoundException('Post not found');

@@ -24,11 +24,11 @@ export class TranslationProvider {
           groq: () => this.ai.groqChat([
             { role: 'system', content: `You are a translator. Translate to ${langName}. Return ONLY the translation.` },
             { role: 'user', content: options.text },
-          ], 'mixtral-8x7b-32768', 0.3),
+          ], 'allam-2-7b', 0.3),
           openrouter: () => this.ai.openRouterChat([
             { role: 'system', content: `You are a translator. Translate to ${langName}. Return ONLY the translation.` },
             { role: 'user', content: options.text },
-          ], 'mistralai/mistral-7b-instruct', 0.3),
+          ], 'meta-llama/llama-3.3-70b-instruct', 0.3),
           deepseek: () => this.ai.deepSeekChat([
             { role: 'system', content: `You are a translator. Translate to ${langName}. Return ONLY the translation.` },
             { role: 'user', content: options.text },
@@ -51,11 +51,11 @@ export class TranslationProvider {
           groq: () => this.ai.groqChat([
             { role: 'system', content: 'Detect the language. Return ONLY the language name (e.g., "English").' },
             { role: 'user', content: options.text },
-          ], 'mixtral-8x7b-32768', 0.3),
+          ], 'allam-2-7b', 0.3),
           openrouter: () => this.ai.openRouterChat([
             { role: 'system', content: 'Detect the language. Return ONLY the language name (e.g., "English").' },
             { role: 'user', content: options.text },
-          ], 'mistralai/mistral-7b-instruct', 0.3),
+          ], 'meta-llama/llama-3.3-70b-instruct', 0.3),
           deepseek: () => this.ai.deepSeekChat([
             { role: 'system', content: 'Detect the language. Return ONLY the language name (e.g., "English").' },
             { role: 'user', content: options.text },
@@ -73,9 +73,9 @@ export class TranslationProvider {
 
     let modelName = '';
     switch (provider) {
-      case 'gemini': modelName = 'gemini-2.0-flash-exp'; break;
-      case 'groq': modelName = 'mixtral-8x7b-32768'; break;
-      case 'openrouter': modelName = 'mistralai/mistral-7b-instruct'; break;
+      case 'gemini': modelName = 'gemini-2.5-flash'; break;
+      case 'groq': modelName = 'allam-2-7b'; break;
+      case 'openrouter': modelName = 'meta-llama/llama-3.3-70b-instruct'; break;
       case 'deepseek': modelName = 'deepseek-chat'; break;
       case 'mistral': modelName = 'mistral-small-latest'; break;
     }
@@ -99,11 +99,11 @@ export class TranslationProvider {
           groq: () => this.ai.groqChat([
             { role: 'system', content: 'Detect the language. Return ONLY the language name (e.g., "English").' },
             { role: 'user', content: text },
-          ], 'mixtral-8x7b-32768', 0.3),
+          ], 'allam-2-7b', 0.3),
           openrouter: () => this.ai.openRouterChat([
             { role: 'system', content: 'Detect the language. Return ONLY the language name (e.g., "English").' },
             { role: 'user', content: text },
-          ], 'mistralai/mistral-7b-instruct', 0.3),
+          ], 'meta-llama/llama-3.3-70b-instruct', 0.3),
           deepseek: () => this.ai.deepSeekChat([
             { role: 'system', content: 'Detect the language. Return ONLY the language name (e.g., "English").' },
             { role: 'user', content: text },
@@ -117,9 +117,9 @@ export class TranslationProvider {
 
       let modelName = '';
       switch (provider) {
-        case 'gemini': modelName = 'gemini-2.0-flash-exp'; break;
-        case 'groq': modelName = 'mixtral-8x7b-32768'; break;
-        case 'openrouter': modelName = 'mistralai/mistral-7b-instruct'; break;
+        case 'gemini': modelName = 'gemini-2.5-flash'; break;
+        case 'groq': modelName = 'allam-2-7b'; break;
+        case 'openrouter': modelName = 'meta-llama/llama-3.3-70b-instruct'; break;
         case 'deepseek': modelName = 'deepseek-chat'; break;
         case 'mistral': modelName = 'mistral-small-latest'; break;
       }

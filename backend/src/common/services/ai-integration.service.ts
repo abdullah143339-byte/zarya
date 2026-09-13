@@ -11,7 +11,7 @@ export class AiIntegrationService {
 
   // ===== GROQ (Free - chat, code, reasoning) =====
   // Get key: https://console.groq.com/keys
-  async groqChat(messages: { role: string; content: string }[], model = 'mixtral-8x7b-32768', temperature = 0.7) {
+  async groqChat(messages: { role: string; content: string }[], model = 'allam-2-7b', temperature = 0.7) {
     const key = this.config.get<string>('GROQ_API_KEY');
     if (!key) throw new Error('Groq API key not configured');
 
@@ -30,12 +30,12 @@ export class AiIntegrationService {
     return this.groqChat([
       { role: 'system', content: `You are an expert ${language} developer. Generate production-ready code. Only output the code with brief explanation.` },
       { role: 'user', content: prompt },
-    ], 'llama-3.1-70b-versatile', 0.3);
+    ], 'allam-2-7b', 0.3);
   }
 
   // ===== GOOGLE GEMINI (Free - translation, analysis, general) =====
   // Get key: https://aistudio.google.com/apikey
-  async geminiGenerate(prompt: string, model = 'gemini-2.0-flash-exp') {
+  async geminiGenerate(prompt: string, model = 'gemini-2.5-flash') {
     const key = this.config.get<string>('GEMINI_API_KEY');
     if (!key) throw new Error('Gemini API key not configured');
 
@@ -66,7 +66,7 @@ export class AiIntegrationService {
   async geminiDeepSearch(query: string) {
     return this.geminiGenerate(
       `You are a research assistant. Provide a comprehensive, well-structured answer about:\n\n${query}\n\nInclude key points, examples, and practical applications. Format with markdown.`,
-      'gemini-2.0-flash-exp',
+      'gemini-2.5-flash',
     );
   }
 
@@ -150,7 +150,7 @@ export class AiIntegrationService {
   // ===== OPENROUTER (Free tier - chat, code, reasoning) =====
   // Get key: https://openrouter.ai/keys
   // Free models: mistral-7b, phi-3-mini, gemma-7b, etc.
-  async openRouterChat(messages: { role: string; content: string }[], model = 'mistralai/mistral-7b-instruct', temperature = 0.7) {
+  async openRouterChat(messages: { role: string; content: string }[], model = 'meta-llama/llama-3.3-70b-instruct', temperature = 0.7) {
     const key = this.config.get<string>('OPENROUTER_API_KEY');
     if (!key) throw new Error('OpenRouter API key not configured');
 
@@ -176,7 +176,7 @@ export class AiIntegrationService {
     return this.openRouterChat([
       { role: 'system', content: `You are an expert ${language} developer. Generate production-ready code. Only output the code with brief explanation.` },
       { role: 'user', content: prompt },
-    ], 'openai/gpt-3.5-turbo', 0.3);
+    ], 'meta-llama/llama-3.3-70b-instruct', 0.3);
   }
 
   // ===== DEEPSEEK (Free $5 credits on signup, no CC needed) =====
@@ -200,7 +200,7 @@ export class AiIntegrationService {
     return this.deepSeekChat([
       { role: 'system', content: `You are an expert ${language} developer. Generate production-ready code. Only output the code with brief explanation.` },
       { role: 'user', content: prompt },
-    ], 'deepseek-coder', 0.3);
+    ], 'deepseek-chat', 0.3);
   }
 
   // ===== MISTRAL AI (Free 500k tokens/day, no CC needed) =====

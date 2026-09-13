@@ -21,6 +21,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { StoriesModule } from './modules/stories/stories.module';
 import { SecurityMiddleware } from './common/middleware/security.middleware';
 import { SanitizerMiddleware } from './common/middleware/sanitizer.middleware';
+import { LoginThrottleService } from './common/services/login-throttle.service';
 import { AuditService } from './common/services/audit.service';
 import { ReputationService } from './common/services/reputation.service';
 import { WalletService } from './common/services/wallet.service';
@@ -56,8 +57,8 @@ import { ProviderFallbackService } from './common/services/provider-fallback.ser
     LearningModule,
     StoriesModule,
   ],
-  providers: [SecurityMiddleware, AuditService, ReputationService, WalletService, SearchService, NovaAiOsService, RagService, AiIntegrationService, ProviderFallbackService],
-  exports: [AuditService, ReputationService, WalletService, SearchService, NovaAiOsService, RagService, AiIntegrationService, ProviderFallbackService],
+  providers: [SecurityMiddleware, LoginThrottleService, AuditService, ReputationService, WalletService, SearchService, NovaAiOsService, RagService, AiIntegrationService, ProviderFallbackService],
+  exports: [LoginThrottleService, AuditService, ReputationService, WalletService, SearchService, NovaAiOsService, RagService, AiIntegrationService, ProviderFallbackService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

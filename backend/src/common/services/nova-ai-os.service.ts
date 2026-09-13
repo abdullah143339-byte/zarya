@@ -43,9 +43,9 @@ export class NovaAiOsService {
 
   private availableFrom(providers: { name: string; check: () => boolean }[]): { name: string; model: string }[] {
     const modelMap: Record<string, string> = {
-      groq: 'mixtral-8x7b-32768',
-      gemini: 'gemini-2.0-flash-exp',
-      openrouter: 'mistralai/mistral-7b-instruct',
+      groq: 'allam-2-7b',
+      gemini: 'gemini-2.5-flash',
+      openrouter: 'meta-llama/llama-3.3-70b-instruct',
       deepseek: 'deepseek-chat',
       mistral: 'mistral-small-latest',
       fal: 'fal-ai/flux/dev',

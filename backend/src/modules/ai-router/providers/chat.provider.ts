@@ -21,9 +21,9 @@ export class ChatProvider {
       const result = await this.fallback.tryProviders(
         this.fallback.getChatProviders(),
         {
-          groq: () => this.ai.groqChat(messages, 'mixtral-8x7b-32768', temp),
-          gemini: () => this.ai.geminiGenerate(messages.map(m => m.content).join('\n'), 'gemini-2.0-flash-exp'),
-          openrouter: () => this.ai.openRouterChat(messages, 'mistralai/mistral-7b-instruct', temp),
+          groq: () => this.ai.groqChat(messages, 'allam-2-7b', temp),
+          gemini: () => this.ai.geminiGenerate(messages.map(m => m.content).join('\n'), 'gemini-2.5-flash'),
+          openrouter: () => this.ai.openRouterChat(messages, 'meta-llama/llama-3.3-70b-instruct', temp),
           deepseek: () => this.ai.deepSeekChat(messages, 'deepseek-chat', temp),
           mistral: () => this.ai.mistralChat(messages, 'mistral-small-latest', temp),
         },
@@ -36,9 +36,9 @@ export class ChatProvider {
 
     let modelName = '';
     switch (provider) {
-      case 'groq': modelName = 'mixtral-8x7b-32768'; break;
-      case 'gemini': modelName = 'gemini-2.0-flash-exp'; break;
-      case 'openrouter': modelName = 'mistralai/mistral-7b-instruct'; break;
+      case 'groq': modelName = 'allam-2-7b'; break;
+      case 'gemini': modelName = 'gemini-2.5-flash'; break;
+      case 'openrouter': modelName = 'meta-llama/llama-3.3-70b-instruct'; break;
       case 'deepseek': modelName = 'deepseek-chat'; break;
       case 'mistral': modelName = 'mistral-small-latest'; break;
     }

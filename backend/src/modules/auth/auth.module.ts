@@ -9,6 +9,7 @@ import { GoogleStrategy } from './google.strategy';
 import { GitHubStrategy } from './github.strategy';
 import { TwoFactorService } from './two-factor.service';
 import { MailModule } from '../mail/mail.module';
+import { LoginThrottleService } from '../../common/services/login-throttle.service';
 
 function jwtSecret(configService: ConfigService): string {
   const secret = configService.get<string>('JWT_SECRET');
@@ -38,8 +39,9 @@ function jwtSecret(configService: ConfigService): string {
     TwoFactorService,
     JwtStrategy,
     GoogleStrategy,
+    LoginThrottleService,
     ...(process.env.GITHUB_CLIENT_ID ? [GitHubStrategy] : []),
   ],
-  exports: [AuthService, TwoFactorService, JwtModule],
+  exports: [AuthService, TwoFactorService, LoginThrottleService, JwtModule],
 })
 export class AuthModule {}

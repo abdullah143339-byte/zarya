@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: zarya-backend
+    runtime: docker
+    repo: https://github.com/abdullah143339-byte/NOVA_X
+    branch: master
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    region: singapore
+    plan: free
+    autoDeploy: false
+    healthCheckPath: /api/v1/health
+    healthCheckTimeout: 300
+    numInstances: 1
+    envVars:
+      - key: APP_PORT
+        value: 8080
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        value: file:/app/data/dev.db
+      - key: CORS_ORIGINS
+        value: https://futureai-gamma.vercel.app

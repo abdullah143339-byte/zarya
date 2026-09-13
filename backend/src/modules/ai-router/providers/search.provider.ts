@@ -25,11 +25,11 @@ export class SearchProvider {
           groq: () => this.ai.groqChat([
             { role: 'system', content: 'You are a research assistant. Provide a comprehensive, well-structured answer. Format with markdown.' },
             { role: 'user', content: options.query },
-          ], 'llama-3.1-70b-versatile', 0.3),
+          ], 'allam-2-7b', 0.3),
           openrouter: () => this.ai.openRouterChat([
             { role: 'system', content: 'You are a research assistant. Provide a comprehensive, well-structured answer. Format with markdown.' },
             { role: 'user', content: options.query },
-          ], 'mistralai/mistral-7b-instruct', 0.3),
+          ], 'meta-llama/llama-3.3-70b-instruct', 0.3),
           deepseek: () => this.ai.deepSeekChat([
             { role: 'system', content: 'You are a research assistant. Provide a comprehensive, well-structured answer. Format with markdown.' },
             { role: 'user', content: options.query },
@@ -42,7 +42,7 @@ export class SearchProvider {
       );
       summary = result.data;
       provider = result.provider;
-      modelName = provider === 'gemini' ? 'gemini-2.0-flash-exp' : provider === 'groq' ? 'llama-3.1-70b-versatile' : provider === 'openrouter' ? 'mistralai/mistral-7b-instruct' : provider === 'deepseek' ? 'deepseek-chat' : 'mistral-small-latest';
+      modelName = provider === 'gemini' ? 'gemini-2.5-flash' : provider === 'groq' ? 'allam-2-7b' : provider === 'openrouter' ? 'meta-llama/llama-3.3-70b-instruct' : provider === 'deepseek' ? 'deepseek-chat' : 'mistral-small-latest';
     } catch {
       throw new ServiceUnavailableException('AI search is unavailable: no AI provider is configured or reachable.');
     }

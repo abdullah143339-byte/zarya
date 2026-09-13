@@ -5,6 +5,8 @@ import {
   UnauthorizedException,
   BadRequestException,
   NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -16,6 +18,7 @@ import { LoginDto } from '../../common/dto/auth.dto';
 import { JwtPayload } from './jwt.strategy';
 import { TwoFactorService } from './two-factor.service';
 import { MailService } from '../mail/mail.service';
+import { LoginThrottleService } from '../../common/services/login-throttle.service';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +28,7 @@ export class AuthService {
     private configService: ConfigService,
     private twoFactorService: TwoFactorService,
     private mailService: MailService,
+    private loginThrottle: LoginThrottleService,
   ) {}
 
   private sanitizeInput(input: string): string {
@@ -76,6 +80,20 @@ export class AuthService {
   }
 
   async login(dto: LoginDto, ip?: string, userAgent?: string) {
+    // 1) Hard lockout gate — checked BEFORE any work, so a locked IP cannot
+    //    trigger expensive bcrypt work or even learn account existence.
+    const lock = this.loginThrottle.isLocked(ip);
+    if (lock.locked) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.TOO_MANY_REQUESTS,
+          message: 'Too many login attempts. Please try again in 15 minutes.',
+          retryAfter: lock.retryAfterSeconds,
+        },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
+
     const user = await this.prisma.user.findFirst({
       where: {
         OR: [
@@ -86,20 +104,27 @@ export class AuthService {
     });
 
     if (!user || !user.passwordHash) {
+      this.loginThrottle.recordFailure(ip);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const isPasswordValid = await bcrypt.compare(dto.password, user.passwordHash);
     if (!isPasswordValid) {
+      this.loginThrottle.recordFailure(ip);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     if (user.status !== 'ACTIVE') {
+      this.loginThrottle.recordFailure(ip);
       throw new UnauthorizedException('Account is not active');
     }
     if (user.isSuspended) {
+      this.loginThrottle.recordFailure(ip);
       throw new UnauthorizedException('Account is suspended');
     }
+
+    // Password correct + account active → this is a successful authentication.
+    this.loginThrottle.recordSuccess(ip);
 
     await this.prisma.user.update({
       where: { id: user.id },
