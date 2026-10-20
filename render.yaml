@@ -13,11 +13,63 @@ services:
     healthCheckTimeout: 300
     numInstances: 1
     envVars:
+      - key: APP_NAME
+        value: zarya
       - key: APP_PORT
         value: 8080
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
         value: file:/app/data/dev.db
+      - key: APP_URL
+        value: https://zarya-backend.onrender.com
+      - key: FRONTEND_URL
+        value: https://futureai-gamma.vercel.app
       - key: CORS_ORIGINS
         value: https://futureai-gamma.vercel.app
+      - key: GOOGLE_CALLBACK_URL
+        value: https://zarya-backend.onrender.com/api/v1/auth/google/callback
+      - key: GITHUB_CALLBACK_URL
+        value: https://zarya-backend.onrender.com/api/v1/auth/github/callback
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 30d
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 30d
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: BFL_API_KEY
+        sync: false
+      - key: FAL_API_KEY
+        sync: false
+      - key: STABILITY_API_KEY
+        sync: false
+      - key: THROTTLE_TTL
+        value: "60000"
+      - key: THROTTLE_LIMIT
+        value: "100"
+      - key: MAIL_DRIVER
+        value: formsubmit
+      - key: SHOW_DEV_OTP
+        value: "true"
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "465"
+      - key: SMTP_FROM
+        value: ZARYA <noreply@zarya.app>
