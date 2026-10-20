@@ -20,8 +20,10 @@ export class LocalDiskStorageProvider implements IStorageProvider {
       return { url, key: file.filename };
     }
     const port = this.configService.get<number>('APP_PORT') || 8080;
-    const host = req.headers.host || `localhost:${port}`;
-    const protocol = req.protocol || 'http';
+    const forwardedProto = (req.headers['x-forwarded-proto']?.toString().split(',')[0] || '').trim();
+    const forwardedHost = (req.headers['x-forwarded-host']?.toString().split(',')[0] || '').trim();
+    const protocol = forwardedProto || req.protocol || 'http';
+    const host = forwardedHost || req.headers.host || `localhost:${port}`;
     const url = `${protocol}://${host}/uploads/${file.filename}`;
     
     return { url, key: file.filename };

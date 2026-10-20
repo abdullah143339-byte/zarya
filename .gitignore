@@ -53,6 +53,9 @@ node_modules/
 /backend/dist/
 /backend/prisma/dev.db
 /backend/prisma/dev.db-journal
+/backend/prisma/*.backup-*
+/backend/data/
+/backend/build-render.log
 
 # misc
 /_SOURCE_DUMP.txt
