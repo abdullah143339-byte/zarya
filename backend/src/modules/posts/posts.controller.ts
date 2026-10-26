@@ -23,8 +23,14 @@ export class PostsController {
   @Get('feed')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async getFeed(@CurrentUser('id') userId: string, @Query('page') page?: number, @Query('limit') limit?: number) {
-    return ApiResponseDto.ok(await this.postsService.getFeed(userId, page || 1, limit || 20));
+  async getFeed(
+    @CurrentUser('id') userId: string,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+    @Query('type') type?: string,
+    @Query('category') category?: string,
+  ) {
+    return ApiResponseDto.ok(await this.postsService.getFeed(userId, page || 1, limit || 20, type, category));
   }
 
   @Get('reels/public')

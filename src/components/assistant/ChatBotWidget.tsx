@@ -1,16 +1,17 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { X, Send, Loader2 } from "lucide-react";
 import api from "@/lib/api";
-import { ZARYA_AI_RULES } from "@/lib/ai";
+import { NOVAX_AI_RULES } from "@/lib/ai";
 import Markdown from "@/components/ui/Markdown";
 
-const WEBSITE_KNOWLEDGE = `You are ZARYA, the intelligent assistant of the ZARYA platform.
+const WEBSITE_KNOWLEDGE = `You are NOVAX, the intelligent assistant of the NOVAX platform.
 You have complete knowledge of the entire website and its features.
 
 == PLATFORM OVERVIEW ==
-ZARYA is a premium AI-powered social ecosystem where users can Connect, Learn, Build, Collaborate, and Grow.
+NOVAX is a premium AI-powered social ecosystem where users can Connect, Learn, Build, Collaborate, and Grow.
 It combines Social Media, AI, Learning, Portfolio, Community, and Collaboration in one platform.
 
 == PAGES & FEATURES ==
@@ -74,19 +75,29 @@ It combines Social Media, AI, Learning, Portfolio, Community, and Collaboration 
 - User reputation system
 - AI-powered recommendations
 
-Answer questions helpfully about any part of the website. Guide users to the right pages and features based on their needs. Keep responses concise and actionable.${ZARYA_AI_RULES}`;
+Answer questions helpfully about any part of the website. Guide users to the right pages and features based on their needs. Keep responses concise and actionable.${NOVAX_AI_RULES}`;
 
 export default function ChatBotWidget() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
     if (open && messages.length === 0) {
-      setMessages([{ role: "system", content: WEBSITE_KNOWLEDGE }, { role: "assistant", content: "Hi! I'm ZARYA. Ask me anything about the platform." }]);
+      setMessages([{ role: "system", content: WEBSITE_KNOWLEDGE }, { role: "assistant", content: "Hi! I'm NOVAX. Ask me anything about the platform." }]);
     }
   }, [open]);
 
@@ -120,10 +131,10 @@ export default function ChatBotWidget() {
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-[#6C63FF]/10">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center ai-glow overflow-hidden">
-                <img src="/zarya.png" alt="ZARYA" className="w-full h-full object-cover" />
+                <img src="/novax.png" alt="NOVAX" className="w-full h-full object-cover" />
               </div>
               <div>
-                <span className="text-sm font-semibold text-foreground block">ZARYA</span>
+                <span className="text-sm font-semibold text-foreground block">NOVAX</span>
                 <span className="text-[10px] text-accent flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Online · AI Assistant
                 </span>
@@ -166,8 +177,8 @@ export default function ChatBotWidget() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), handleSend())}
-                placeholder="Ask me about ZARYA..."
-                aria-label="Ask ZARYA AI"
+                placeholder="Ask me about NOVAX..."
+                aria-label="Ask NOVAX AI"
                 className="flex-1 rounded-2xl tactile-inset px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/40 transition-all"
               />
               <button
@@ -186,10 +197,14 @@ export default function ChatBotWidget() {
       <button
         onClick={() => setOpen(!open)}
         aria-label={open ? "Close AI assistant" : "Open AI assistant"}
-        className="fixed bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] md:bottom-6 right-4 md:right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-br from-[#6C63FF] to-[#7C3AED] shadow-lg shadow-[#6C63FF]/40 ai-glow flex items-center justify-center hover:scale-105 active:scale-95 transition-all animate-float"
-        style={{ animationDuration: "4s" }}
+        className="fixed z-50 w-14 h-14 rounded-full bg-gradient-to-br from-[#6C63FF] to-[#7C3AED] shadow-lg shadow-[#6C63FF]/25 flex items-center justify-center hover:scale-105 active:scale-95 transition-all bottom-6 right-4 md:right-6"
+        style={
+          pathname?.startsWith("/dashboard") && isMobile
+            ? { bottom: "calc(env(safe-area-inset-bottom) + 5rem)", right: "1rem" }
+            : undefined
+        }
       >
-        {open ? <X className="w-6 h-6 text-white" /> : <img src="/zarya.png" alt="ZARYA" className="w-11 h-11 rounded-full object-cover" />}
+        {open ? <X className="w-6 h-6 text-white" /> : <img src="/novax.png" alt="NOVAX" className="w-11 h-11 rounded-full object-cover" />}
       </button>
     </>
   );

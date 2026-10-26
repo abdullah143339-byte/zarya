@@ -49,7 +49,7 @@ export default function CommunitySuggestions() {
     return (
       <section className="glass rounded-2xl p-4" aria-label="Suggested communities">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold text-foreground">Suggested Communities</h2>
+          <h2 className="text-base font-bold text-foreground">Suggested Communities</h2>
           <Users className="w-4 h-4 text-muted-foreground" />
         </div>
         <div className="flex justify-center py-4"><Loader2 className="w-5 h-5 text-primary animate-spin" /></div>
@@ -61,7 +61,7 @@ export default function CommunitySuggestions() {
   return (
     <section className="glass rounded-2xl p-4" aria-label="Suggested communities">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-bold text-foreground">Suggested Communities</h2>
+        <h2 className="text-base font-bold text-foreground">Suggested Communities</h2>
         <Users className="w-4 h-4 text-muted-foreground" />
       </div>
       <div className="space-y-3">
@@ -79,7 +79,7 @@ export default function CommunitySuggestions() {
             <button
               onClick={() => toggleJoin(c)}
               disabled={c.isMember || joining.has(c.id)}
-              className={`h-8 px-3 rounded-lg text-xs font-medium flex items-center gap-1 shrink-0 transition-all ${c.isMember ? "bg-muted text-foreground" : "bg-gradient-primary text-white hover:scale-105"}`}
+              className={`h-8 px-3 rounded-xl text-xs font-medium flex items-center gap-1 shrink-0 transition-all ${c.isMember ? "bg-muted text-foreground" : "bg-gradient-primary text-white hover:scale-105"}`}
             >
               {joining.has(c.id) ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : c.isMember ? <UserCheck className="w-3.5 h-3.5" /> : <UserPlus className="w-3.5 h-3.5" />}
               {c.isMember ? "Joined" : "Join"}

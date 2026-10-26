@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "@/lib/api";
+import Button from "@/components/ui/Button";
 import {
   Heart,
   MessageCircle,
@@ -407,6 +408,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
             <motion.span animate={{ scale: bookmarkAnim ? [1, 1.25, 1] : 1 }} transition={{ duration: 0.35 }} onAnimationComplete={() => setBookmarkAnim(false)}>
               {isBookmarked ? <BookmarkCheck className="w-4 h-4 fill-amber-500" /> : <Bookmark className="w-4 h-4" />}
             </motion.span>
+            <span className="hidden sm:inline">Bookmark</span>
           </button>
         </div>
       </div>
@@ -453,10 +455,9 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
                   aria-label="Write a comment"
                   className="flex-1 h-9 rounded-xl bg-muted border border-border px-3.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
-                <button onClick={submitComment} disabled={!commentText.trim() || commenting} aria-label="Post comment"
-                  className="w-9 h-9 rounded-xl bg-gradient-primary text-white flex items-center justify-center disabled:opacity-40 transition-all hover:scale-105">
+                <Button onClick={submitComment} disabled={!commentText.trim() || commenting} aria-label="Post comment" variant="primary" size="icon" className="w-9 h-9 shrink-0">
                   {commenting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                </button>
+                </Button>
               </div>
             </div>
           </motion.div>

@@ -6,7 +6,7 @@ import { Sparkles, Loader2, Check, Copy, X } from "lucide-react";
 import api from "@/lib/api";
 import { AI_PROFILE_ACTIONS, parseJsonArray } from "./data";
 import { cn } from "@/lib/utils";
-import { ZARYA_AI_RULES } from "@/lib/ai";
+import { NOVAX_AI_RULES } from "@/lib/ai";
 import Markdown from "@/components/ui/Markdown";
 
 interface AiPanelProps {
@@ -25,13 +25,13 @@ interface AiPanelProps {
 }
 
 const ACTION_PROMPTS: Record<string, string> = {
-  bio: "Write a compelling, professional bio for a ZARYA creator profile. Keep it under 220 characters, friendly and premium.",
+  bio: "Write a compelling, professional bio for a NOVAX creator profile. Keep it under 220 characters, friendly and premium.",
   summary: "Write a concise professional profile summary (2-3 sentences) that highlights strengths, expertise and passion.",
   skills: "Analyze the user's skills and suggest 3 recommended skills to add, plus a one-line explanation for each.",
   career: "Suggest 3 concrete next steps to grow as a creator on the platform, tailored to their profile.",
   content: "Suggest 5 content/post ideas this creator could publish, one line each.",
   username: "Suggest 6 clean, memorable username/handle ideas based on their current handle.",
-  seo: "Give 5 quick SEO/profile-optimization tips for a ZARYA profile.",
+  seo: "Give 5 quick SEO/profile-optimization tips for a NOVAX profile.",
   translate: "Translate the user's bio into natural English, Spanish and Arabic. Show all three.",
   reputation: "Explain the user's reputation score in simple terms and give 3 ways to improve it.",
 };
@@ -59,10 +59,10 @@ export default function AiPanel({ open, onClose, displayName, username, bio, pro
     setOutput("");
     const label = AI_PROFILE_ACTIONS.find((a) => a.id === id)?.label || id;
     const prompt = ACTION_PROMPTS[id];
-    const finalPrompt = id === "translate" ? `${prompt}\n\nBio to translate:\n"${bio || displayName + " is a creator on ZARYA."}"` : prompt;
+    const finalPrompt = id === "translate" ? `${prompt}\n\nBio to translate:\n"${bio || displayName + " is a creator on NOVAX."}"` : prompt;
     try {
       const res = await api.aiChat([
-        { role: "system", content: "You are ZARYA's friendly profile assistant. Be concise, warm and practical. Use plain text with short bullet points. " + ZARYA_AI_RULES },
+        { role: "system", content: "You are NOVAX's friendly profile assistant. Be concise, warm and practical. Use plain text with short bullet points. " + NOVAX_AI_RULES },
         { role: "user", content: `${context}\n\nTask: ${finalPrompt}` },
       ]);
       setOutput((res.data?.content as string) || "No response returned.");
@@ -107,7 +107,7 @@ export default function AiPanel({ open, onClose, displayName, username, bio, pro
                   <Sparkles className="w-4 h-4" style={{ color: accent }} />
                 </span>
                 <div>
-                  <h3 className="text-sm font-bold text-foreground">ZARYA Profile Assistant</h3>
+                  <h3 className="text-sm font-bold text-foreground">NOVAX Profile Assistant</h3>
                   <p className="text-[11px] text-muted-foreground">Powered by {displayName.split(" ")[0]}&apos;s profile data</p>
                 </div>
               </div>

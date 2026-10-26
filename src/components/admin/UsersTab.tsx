@@ -156,7 +156,7 @@ export default function UsersTab() {
   const handleExport = () => {
     const rows: (string | number)[][] = [["Username", "Name", "Email", "Role", "Status", "Posts", "Followers", "Joined"]];
     filtered.forEach((u) => rows.push([u.username, `${u.firstName} ${u.lastName}`, u.email, u.role, u.status, u.postsCount, u.followersCount, formatDate(u.createdAt)]));
-    downloadTextFile("nova-users.csv", toCsv(rows));
+    downloadTextFile("novax-users.csv", toCsv(rows));
     notify("Users exported to CSV", "info");
   };
 

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { BadgeCheck, MapPin, Music, Sparkles } from "lucide-react";
+import { BadgeCheck, MapPin, Music, Sparkles, UserPlus, Check, Loader2 } from "lucide-react";
+import api from "@/lib/api";
 import type { Reel } from "./types";
 
 const MAX_CHARS = 120;
@@ -16,11 +17,33 @@ function extractHashtags(content: string): string[] {
 interface ReelInfoProps {
   reel: Reel;
   onProfile: () => void;
+  currentUserId?: string;
+  onFollowAuth?: () => void;
 }
 
-export default function ReelInfo({ reel, onProfile }: ReelInfoProps) {
+export default function ReelInfo({ reel, onProfile, currentUserId, onFollowAuth }: ReelInfoProps) {
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followBusy, setFollowBusy] = useState(false);
+
+  const canFollow = !!currentUserId && !!reel.author?.id && reel.author.id !== currentUserId;
+
+  const toggleFollow = async () => {
+    if (!currentUserId) { onFollowAuth?.(); return; }
+    if (followBusy) return;
+    const next = !isFollowing;
+    setIsFollowing(next);
+    setFollowBusy(true);
+    try {
+      const res = await api.followUser(reel.author.id);
+      setIsFollowing(res?.data?.following === true);
+    } catch {
+      setIsFollowing(!next);
+    } finally {
+      setFollowBusy(false);
+    }
+  };
 
   const caption = reel.content || "";
   const long = caption.length > MAX_CHARS;
@@ -30,10 +53,36 @@ export default function ReelInfo({ reel, onProfile }: ReelInfoProps) {
   return (
     <div className="absolute left-0 right-16 bottom-24 z-20 px-4 pb-2">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="space-y-2">
-        <button onClick={onProfile} className="flex items-center gap-2 group max-w-full" aria-label={`View ${reel.author.username}`}>
-          <span className="text-[15px] font-bold text-white group-hover:underline truncate">@{reel.author.username}</span>
-          {reel.author.isVerified && <BadgeCheck className="w-4 h-4 text-accent shrink-0" />}
-        </button>
+        <div className="flex items-center gap-2 max-w-full">
+          <button onClick={onProfile} className="flex items-center gap-2 group min-w-0" aria-label={`View ${reel.author.username}`}>
+            <span className="text-[15px] font-bold text-white group-hover:underline truncate">@{reel.author.username}</span>
+            {reel.author.isVerified && <BadgeCheck className="w-4 h-4 text-accent shrink-0" />}
+          </button>
+          {canFollow && (
+            <button
+              onClick={(e) => { e.stopPropagation(); toggleFollow(); }}
+              disabled={followBusy}
+              aria-label={isFollowing ? "Unfollow" : "Follow"}
+              className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-semibold transition-all ${
+                isFollowing
+                  ? "bg-white/10 text-white border border-white/25 hover:bg-white/20"
+                  : "bg-gradient-to-r from-accent to-secondary text-white shadow-lg shadow-accent/25 hover:opacity-90"
+              }`}
+            >
+              {followBusy ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : isFollowing ? (
+                <>
+                  <Check className="w-3.5 h-3.5" /> Following
+                </>
+              ) : (
+                <>
+                  <UserPlus className="w-3.5 h-3.5" /> Follow
+                </>
+              )}
+            </button>
+          )}
+        </div>
 
         {caption && (
           <p className="text-sm leading-relaxed text-white/95">

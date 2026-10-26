@@ -28,7 +28,7 @@ export default function ReelEmpty({ onUpload }: ReelEmptyProps) {
         </motion.div>
         <h2 className="text-2xl font-bold text-foreground">No Reels Yet</h2>
         <p className="text-sm text-muted-foreground mt-2 max-w-xs mx-auto">
-          Be the first to share a short video with the ZARYA community. Capture a moment, upload and let the world watch.
+          Be the first to share a short video with the NOVAX community. Capture a moment, upload and let the world watch.
         </p>
         <button
           onClick={onUpload}

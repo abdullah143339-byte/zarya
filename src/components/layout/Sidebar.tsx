@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -14,7 +13,6 @@ import {
   Settings,
   LogOut,
   GraduationCap,
-  Search,
   Video,
   ShoppingCart,
   Route,
@@ -23,7 +21,6 @@ import {
 } from "lucide-react";
 
 const bottomItems = [
-  { label: "Notifications", href: "/dashboard/notifications", icon: <Bell className="w-5 h-5" /> },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings className="w-5 h-5" /> },
 ];
 
@@ -33,7 +30,6 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
-  const [searchQuery, setSearchQuery] = useState("");
 
   const isAdmin = user && ADMIN_ROLES.includes(user.role || "");
 
@@ -45,6 +41,7 @@ export default function Sidebar() {
     { label: "Projects", href: "/dashboard/projects", icon: <FolderGit2 className="w-5 h-5" /> },
     { label: "Learning Platform", href: "/dashboard/learning", icon: <GraduationCap className="w-5 h-5" /> },
     { label: "Messages", href: "/dashboard/messages", icon: <MessageSquare className="w-5 h-5" /> },
+    { label: "Notifications", href: "/dashboard/notifications", icon: <Bell className="w-5 h-5" /> },
     ...(isAdmin
       ? [
           { label: "AI Router", href: "/dashboard/ai-router", icon: <Route className="w-5 h-5" /> },
@@ -56,14 +53,6 @@ export default function Sidebar() {
   const handleLogout = async () => {
     await logout();
     router.push("/login");
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/dashboard/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery("");
-    }
   };
 
   return (
@@ -118,7 +107,7 @@ export default function Sidebar() {
         <Link href="/" className="flex items-center gap-2.5">
           <Logo size={36} />
           <div className="min-w-0">
-            <span className="block text-lg font-bold text-gradient leading-none">ZARYA</span>
+            <span className="block text-lg font-bold text-gradient leading-none">NOVAX</span>
             <span className="block text-[9px] text-muted-foreground tracking-wide truncate">Think Beyond Social</span>
           </div>
         </Link>
@@ -135,19 +124,6 @@ export default function Sidebar() {
             </div>
           </div>
         )}
-      </div>
-
-      <div className="p-3">
-        <form onSubmit={handleSearch} className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search..."
-            className="w-full h-9 rounded-xl bg-muted border border-border pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-          />
-        </form>
       </div>
 
       <nav className="flex-1 overflow-y-auto p-3 space-y-1">

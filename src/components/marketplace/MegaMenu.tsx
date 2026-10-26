@@ -98,7 +98,7 @@ export default function MegaMenu({ location }: MegaMenuProps) {
               onClick={() => setOpen(false)}
               className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-gradient-primary text-white text-xs font-medium hover:shadow-lg hover:shadow-primary/25 transition-all"
             >
-              <Handshake className="w-4 h-4" /> Sell on ZARYA
+              <Handshake className="w-4 h-4" /> Sell on NOVAX
             </Link>
             <Link
               href="/dashboard/marketplace/search?q=AI"

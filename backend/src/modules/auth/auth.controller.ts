@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Req, Res, UseGuards, HttpCode, HttpStatus, Query, UnauthorizedException, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Req, Res, UseGuards, HttpCode, HttpStatus, Query, UnauthorizedException, Delete, Logger } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { TwoFactorService } from './two-factor.service';
@@ -15,7 +15,8 @@ import { Response } from 'express';
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-  private readonly REFRESH_COOKIE = 'nova_refresh';
+  private readonly REFRESH_COOKIE = 'novax_refresh';
+  private readonly logger = new Logger(AuthController.name);
 
   constructor(
     private authService: AuthService,
@@ -27,7 +28,7 @@ export class AuthController {
     return {
       httpOnly: true,
       secure: isProd,
-      sameSite: 'strict' as const,
+      sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
       path: '/api/v1/auth',
       maxAge: 30 * 24 * 60 * 60 * 1000,
     };
@@ -130,6 +131,7 @@ export class AuthController {
       });
       return res.redirect(`${frontendUrl}/auth/callback?${params.toString()}`);
     } catch (error) {
+      this.logger.error(`Google OAuth callback failed: ${error instanceof Error ? error.message : String(error)}`);
       const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
       return res.redirect(`${frontendUrl}/login?error=google_auth_failed`);
     }

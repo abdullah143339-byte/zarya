@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useCallback, useEffect, useRef, useState, forwardRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Play,
   Pause,
@@ -13,6 +13,7 @@ import {
   Loader2,
   RefreshCw,
   AlertTriangle,
+  Heart,
 } from "lucide-react";
 
 interface ReelPlayerProps {
@@ -20,17 +21,25 @@ interface ReelPlayerProps {
   poster?: string;
   active: boolean;
   paused?: boolean;
+  muted?: boolean;
+  onToggleMute?: () => void;
   onDoubleTap?: () => void;
   preload?: "none" | "metadata" | "auto";
 }
 
-export default function ReelPlayer({ src, poster, active, paused = false, onDoubleTap, preload = "metadata" }: ReelPlayerProps) {
+const ReelPlayer = forwardRef<HTMLVideoElement, ReelPlayerProps>(function ReelPlayer(
+  { src, poster, active, paused = false, muted, onToggleMute, onDoubleTap, preload = "metadata" },
+  ref
+) {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const clickTimer = useRef<number | null>(null);
+  const heartId = useRef(0);
 
+  const [selfMuted, setSelfMuted] = useState(true);
+  const mutedOn = muted !== undefined ? muted : selfMuted;
+  const [hearts, setHearts] = useState<{ id: number; x: number; y: number }[]>([]);
   const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(true);
   const [loading, setLoading] = useState(true);
   const [buffering, setBuffering] = useState(false);
   const [error, setError] = useState(false);
@@ -39,33 +48,32 @@ export default function ReelPlayer({ src, poster, active, paused = false, onDoub
   const [duration, setDuration] = useState(0);
   const [buffered, setBuffered] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
-  const [controlsVisible, setControlsVisible] = useState(true);
+  const [controlsVisible, setControlsVisible] = useState(false);
 
   useEffect(() => {
-    // On touch devices there is no hover; keep controls visible by default.
-    const isTouch = typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
-    setControlsVisible(!isTouch);
-  }, []);
-
-  useEffect(() => {
-    if (!controlsVisible) {
-      const t = setTimeout(() => setControlsVisible(true), 3000);
-      return () => clearTimeout(t);
-    }
+    if (!controlsVisible) return;
+    const t = setTimeout(() => setControlsVisible(false), 2500);
+    return () => clearTimeout(t);
   }, [controlsVisible]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = mutedOn;
+  }, [mutedOn]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     if (paused) { video.pause(); return; }
     if (active && !error) {
-      video.muted = true;
+      video.muted = mutedOn;
       const p = video.play();
       if (p) p.catch(() => {});
     } else if (!active) {
       video.pause();
     }
-  }, [active, error, paused]);
+  }, [active, error, paused, mutedOn]);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;
@@ -74,11 +82,12 @@ export default function ReelPlayer({ src, poster, active, paused = false, onDoub
   }, [error]);
 
   const toggleMute = useCallback(() => {
+    if (onToggleMute) { onToggleMute(); return; }
     const video = videoRef.current;
     if (!video) return;
-    video.muted = !video.muted;
-    setMuted(video.muted);
-  }, []);
+    video.muted = !mutedOn;
+    setSelfMuted(!mutedOn);
+  }, [mutedOn, onToggleMute]);
 
   const toggleFullscreen = useCallback(() => {
     const el = containerRef.current;
@@ -117,15 +126,35 @@ export default function ReelPlayer({ src, poster, active, paused = false, onDoub
     else if (e.key === "ArrowUp") { e.preventDefault(); toggleMute(); }
   }, [togglePlay, toggleMute, toggleFullscreen]);
 
+  const spawnHeart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    const el = containerRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    let x = 0;
+    let y = 0;
+    if ("touches" in e && e.touches.length > 0) {
+      x = e.touches[0].clientX - rect.left;
+      y = e.touches[0].clientY - rect.top;
+    } else {
+      const mouse = e as React.MouseEvent;
+      x = mouse.clientX - rect.left;
+      y = mouse.clientY - rect.top;
+    }
+    const id = ++heartId.current;
+    setHearts((h) => [...h, { id, x, y }]);
+    window.setTimeout(() => setHearts((h) => h.filter((hh) => hh.id !== id)), 900);
+  }, []);
+
   const handleClick = useCallback(() => {
     if (clickTimer.current !== null) { window.clearTimeout(clickTimer.current); clickTimer.current = null; return; }
-    clickTimer.current = window.setTimeout(() => { clickTimer.current = null; togglePlay(); }, 250);
+    clickTimer.current = window.setTimeout(() => { clickTimer.current = null; togglePlay(); setControlsVisible(true); }, 250);
   }, [togglePlay]);
 
-  const handleDoubleClick = useCallback(() => {
+  const handleDoubleClick = useCallback((e: React.MouseEvent) => {
     if (clickTimer.current !== null) { window.clearTimeout(clickTimer.current); clickTimer.current = null; }
+    spawnHeart(e);
     onDoubleTap?.();
-  }, [onDoubleTap]);
+  }, [onDoubleTap, spawnHeart]);
 
   useEffect(() => {
     const onFs = () => setFullscreen(!!document.fullscreenElement);
@@ -146,17 +175,23 @@ export default function ReelPlayer({ src, poster, active, paused = false, onDoub
   return (
     <div
       ref={containerRef}
+      data-reel-player
       className="absolute inset-0 bg-black overflow-hidden group select-none focus:outline-none"
       tabIndex={0}
       onKeyDown={handleKeyDown}
+      onFocus={() => setControlsVisible(true)}
       role="group"
       aria-label="Reel video player"
     >
       <video
-        ref={videoRef}
+        ref={(el) => {
+          videoRef.current = el;
+          if (typeof ref === "function") ref(el);
+          else if (ref) ref.current = el;
+        }}
         src={src}
         poster={poster}
-        className="absolute inset-0 w-full h-full object-contain"
+        className="absolute inset-0 w-full h-full object-cover"
         autoPlay
         loop
         muted
@@ -190,7 +225,7 @@ export default function ReelPlayer({ src, poster, active, paused = false, onDoub
             <AlertTriangle className="w-7 h-7 text-red-400" />
           </div>
           <p className="text-sm text-white/80 text-center px-6">
-            This video could not be played. It may be unavailable or in an unsupported format.
+            Unable to play this Reel
           </p>
           <button
             onClick={retry}
@@ -206,8 +241,38 @@ export default function ReelPlayer({ src, poster, active, paused = false, onDoub
         <>
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/40 pointer-events-none" />
 
-          <div className={`absolute inset-x-0 bottom-0 z-20 px-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] transition-opacity duration-300 ${controlsVisible ? "opacity-100" : "opacity-0"}`}>
-            <div className="relative h-1 rounded-full bg-white/25 overflow-hidden">
+          {hearts.map((h) => (
+            <motion.div
+              key={h.id}
+              initial={{ scale: 0, opacity: 1, y: 0 }}
+              animate={{ scale: 1.5, opacity: 0, y: -80 }}
+              transition={{ duration: 0.9, ease: "easeOut" }}
+              className="absolute z-30 pointer-events-none"
+              style={{ left: h.x - 24, top: h.y - 24 }}
+            >
+              <Heart className="w-12 h-12 fill-red-500 text-red-500 drop-shadow-lg" />
+            </motion.div>
+          ))}
+
+          <AnimatePresence>
+            {!playing && !loading && !buffering && !error && (
+              <motion.div
+                key="center-play"
+                initial={{ scale: 0.5, opacity: 0.8 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.5, opacity: 0 }}
+                transition={{ type: "spring", damping: 20, stiffness: 260 }}
+                className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
+              >
+                <div className="w-20 h-20 rounded-full bg-black/45 flex items-center justify-center backdrop-blur-sm">
+                  <Play className="w-9 h-9 text-white translate-x-0.5" />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className={`absolute inset-x-0 bottom-2 z-20 px-4 transition-opacity duration-300 ${controlsVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+            <div className="relative h-1 rounded-full bg-white/25 overflow-hidden mb-1.5">
               <div className="absolute inset-y-0 left-0 bg-white/30" style={{ width: `${bufPct}%` }} />
               <input
                 type="range"
@@ -221,12 +286,12 @@ export default function ReelPlayer({ src, poster, active, paused = false, onDoub
               />
               <div className="absolute inset-y-0 left-0 bg-white" style={{ width: `${pct}%` }} />
             </div>
-            <div className="flex items-center gap-1 mt-2 text-white/90">
+            <div className="flex items-center gap-1 text-white/90">
               <button onClick={togglePlay} aria-label={playing ? "Pause" : "Play"} className="w-10 h-10 flex items-center justify-center rounded-full active:bg-white/20 transition-colors">
                 {playing ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
               </button>
-              <button onClick={toggleMute} aria-label={muted ? "Unmute" : "Mute"} className="w-10 h-10 flex items-center justify-center rounded-full active:bg-white/20 transition-colors">
-                {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+              <button onClick={toggleMute} aria-label={mutedOn ? "Unmute" : "Mute"} className="w-10 h-10 flex items-center justify-center rounded-full active:bg-white/20 transition-colors">
+                {mutedOn ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
               </button>
               <span className="text-[11px] font-medium tabular-nums ml-1">{fmt(currentTime)} / {fmt(duration)}</span>
               <span className="flex-1" />
@@ -241,6 +306,10 @@ export default function ReelPlayer({ src, poster, active, paused = false, onDoub
             </div>
           </div>
 
+          <div className="absolute inset-x-0 bottom-0 z-10 h-0.5 bg-white/20 pointer-events-none">
+            <div className="h-full bg-white transition-[width] duration-200" style={{ width: `${pct}%` }} />
+          </div>
+
           <motion.button
             onClick={handleClick}
             onDoubleClick={handleDoubleClick}
@@ -252,4 +321,6 @@ export default function ReelPlayer({ src, poster, active, paused = false, onDoub
       )}
     </div>
   );
-}
+});
+
+export default ReelPlayer;

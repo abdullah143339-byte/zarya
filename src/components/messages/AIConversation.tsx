@@ -4,14 +4,14 @@ import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, Loader2, Send, Trash2 } from "lucide-react";
 import api from "@/lib/api";
 import { cn } from "@/lib/utils";
-import { ZARYA_AI_RULES } from "@/lib/ai";
+import { NOVAX_AI_RULES } from "@/lib/ai";
 import Markdown from "@/components/ui/Markdown";
 
-const WEBSITE_KNOWLEDGE = `You are ZARYA, the intelligent assistant of the ZARYA platform.
+const WEBSITE_KNOWLEDGE = `You are NOVAX, the intelligent assistant of the NOVAX platform.
 You have complete knowledge of the entire website and its features.
 
 == PLATFORM OVERVIEW ==
-ZARYA is a premium AI-powered social ecosystem where users can Connect, Learn, Build, Collaborate, and Grow.
+NOVAX is a premium AI-powered social ecosystem where users can Connect, Learn, Build, Collaborate, and Grow.
 It combines Social Media, AI, Learning, Portfolio, Community, and Collaboration in one platform.
 
 == PAGES & FEATURES ==
@@ -75,7 +75,7 @@ It combines Social Media, AI, Learning, Portfolio, Community, and Collaboration 
 - User reputation system
 - AI-powered recommendations
 
-Answer questions helpfully about any part of the website. Guide users to the right pages and features based on their needs. Keep responses concise and actionable.${ZARYA_AI_RULES}`;
+Answer questions helpfully about any part of the website. Guide users to the right pages and features based on their needs. Keep responses concise and actionable.${NOVAX_AI_RULES}`;
 
 interface AIConversationProps {
   onBack: () => void;
@@ -84,7 +84,7 @@ interface AIConversationProps {
 export default function AIConversation({ onBack }: AIConversationProps) {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([
     { role: "system", content: WEBSITE_KNOWLEDGE },
-    { role: "assistant", content: "Hi! I'm ZARYA. Ask me anything about the platform." },
+    { role: "assistant", content: "Hi! I'm NOVAX. Ask me anything about the platform." },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -115,7 +115,7 @@ export default function AIConversation({ onBack }: AIConversationProps) {
   const clearChat = () => {
     setMessages([
       { role: "system", content: WEBSITE_KNOWLEDGE },
-      { role: "assistant", content: "Hi! I'm ZARYA. Ask me anything about the platform." },
+      { role: "assistant", content: "Hi! I'm NOVAX. Ask me anything about the platform." },
     ]);
   };
 
@@ -133,11 +133,11 @@ export default function AIConversation({ onBack }: AIConversationProps) {
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center ai-glow overflow-hidden shrink-0">
-            <img src="/zarya.png" alt="ZARYA" className="w-full h-full object-cover" />
+            <img src="/novax.png" alt="NOVAX" className="w-full h-full object-cover" />
           </div>
           <div className="min-w-0">
             <h3 className="text-sm font-semibold text-foreground truncate flex items-center gap-1.5">
-              ZARYA AI Assistant
+              NOVAX AI Assistant
               <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#6C63FF]/15 text-accent font-bold uppercase tracking-wide shrink-0">AI</span>
             </h3>
             <p className="text-xs text-accent flex items-center gap-1">
@@ -193,8 +193,8 @@ export default function AIConversation({ onBack }: AIConversationProps) {
                   handleSend();
                 }
               }}
-              placeholder="Message ZARYA..."
-              aria-label="Message ZARYA"
+              placeholder="Message NOVAX..."
+              aria-label="Message NOVAX"
               className="w-full max-h-40 rounded-2xl tactile-inset px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 resize-none focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/40 transition-all"
             />
           </div>

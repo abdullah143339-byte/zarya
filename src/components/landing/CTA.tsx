@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import Button from "@/components/ui/Button";
 import BlurText from "@/components/ui/BlurText";
 import Atmosphere from "@/components/landing/Atmosphere";
+import VideoBackground from "@/components/landing/VideoBackground";
 import { EASE } from "@/components/landing/motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
@@ -20,6 +21,7 @@ export default function CTA() {
   return (
     <section ref={ref} className="py-28 relative overflow-hidden">
       <Atmosphere variant="cta" />
+      <VideoBackground src="/videos/cta-bg.mp4" />
 
       {!reduced && (
         <motion.div
@@ -57,6 +59,7 @@ export default function CTA() {
           </div>
 
           <BlurText
+            as="h2"
             text="Ready to Experience The Future?"
             className="text-4xl sm:text-6xl font-bold mb-6"
             highlightWords={["The", "Future?"]}
@@ -83,7 +86,7 @@ export default function CTA() {
           >
             <motion.div whileTap={reduced ? undefined : { scale: 0.97 }}>
               <Link href="/signup">
-                <Button size="lg" className="btn-premium">
+                <Button size="lg">
                   Create Free Account
                   <ArrowRight className="w-4 h-4" />
                 </Button>
@@ -96,6 +99,23 @@ export default function CTA() {
                 </Button>
               </Link>
             </motion.div>
+          </motion.div>
+
+          {/* final brand moment — the atmosphere settles, the mark remains */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 1.6, delay: 0.55, ease: EASE }}
+            className="mt-20"
+          >
+            <div className="mx-auto w-24 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent mb-10" aria-hidden="true" />
+            <p className="text-xl sm:text-2xl font-semibold tracking-[0.5em] text-foreground/90 text-center pl-[0.5em]">
+              NOVAX
+            </p>
+            <p className="mt-3 text-[11px] sm:text-xs tracking-[0.18em] text-muted-foreground/70 text-center">
+              The dawn of a new era.
+            </p>
           </motion.div>
         </motion.div>
       </div>

@@ -81,11 +81,11 @@ export default function SignupPage() {
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-6">
               <Logo size={40} rounded="rounded-xl" />
-              <span className="text-xl font-bold text-gradient">ZARYA</span>
+              <span className="text-xl font-bold text-gradient">NOVAX</span>
             </Link>
             <h1 className="text-2xl font-bold text-foreground">Create your account</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              ZARYA — Think Beyond Social
+              NOVAX — Think Beyond Social
             </p>
           </div>
 
@@ -254,18 +254,18 @@ export default function SignupPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-lg font-bold text-foreground mb-3">
-              {legalModal === "terms" ? "ZARYA Terms of Service" : "ZARYA Privacy Policy"}
+              {legalModal === "terms" ? "NOVAX Terms of Service" : "NOVAX Privacy Policy"}
             </h2>
             <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               {legalModal === "terms" ? (
                 <>
-                  <p>By creating an account you agree to use ZARYA responsibly. You are responsible for content you post, and you agree not to share hateful, illegal, or harmful material.</p>
+                  <p>By creating an account you agree to use NOVAX responsibly. You are responsible for content you post, and you agree not to share hateful, illegal, or harmful material.</p>
                   <p>We may update these Terms from time to time. Continued use after changes means you accept the updated Terms.</p>
-                  <p>ZARYA may suspend accounts that violate these Terms. You can delete your account at any time from Settings.</p>
+                  <p>NOVAX may suspend accounts that violate these Terms. You can delete your account at any time from Settings.</p>
                 </>
               ) : (
                 <>
-                  <p>ZARYA collects basic account information (name, email, username) to provide the service. Your data is never sold to third parties.</p>
+                  <p>NOVAX collects basic account information (name, email, username) to provide the service. Your data is never sold to third parties.</p>
                   <p>Content you make public is visible to other users. Private data such as your email stays private.</p>
                   <p>You can request a copy or deletion of your data at any time by contacting support.</p>
                 </>

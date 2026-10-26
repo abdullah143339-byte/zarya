@@ -142,13 +142,13 @@ export default function RolesTab() {
   const handleExport = () => {
     const rows: (string | number)[][] = [["Role", "Tagline", "Permissions"]];
     filtered.forEach((r) => rows.push([r.name, r.tagline, r.permissions.includes("*") ? "ALL" : r.permissions.length]));
-    downloadTextFile("nova-roles.csv", toCsv(rows));
+    downloadTextFile("novax-roles.csv", toCsv(rows));
     const json = JSON.stringify(filtered, null, 2);
     const blob = new Blob([json], { type: "application/json;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "nova-roles.json";
+    a.download = "novax-roles.json";
     a.click();
     URL.revokeObjectURL(url);
     notify("Roles exported", "info");
@@ -268,7 +268,7 @@ export default function RolesTab() {
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">{detailRole.description}</p>
             {detailRole.permissions.includes("*") ? (
-              <div className="p-4 rounded-xl bg-gradient-primary/10 text-primary font-medium">Full access to the entire ZARYA platform.</div>
+              <div className="p-4 rounded-xl bg-gradient-primary/10 text-primary font-medium">Full access to the entire NOVAX platform.</div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {detailRole.permissions.map((p) => (

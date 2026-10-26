@@ -46,7 +46,7 @@ export default function MobileNav() {
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 glass-strong border-b border-border flex items-center justify-between px-4 pt-[env(safe-area-inset-top)] h-14">
         <Link href="/" className="flex items-center gap-2 min-w-0">
           <Logo size={32} />
-          <span className="font-bold text-gradient truncate">ZARYA</span>
+          <span className="font-bold text-gradient truncate">NOVAX</span>
         </Link>
         <div className="flex items-center gap-1.5 shrink-0">
           <Link

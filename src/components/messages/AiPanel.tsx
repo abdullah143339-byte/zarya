@@ -6,7 +6,7 @@ import { Sparkles, X, FileText, Languages, Zap, PenLine, Code, ListTodo } from "
 import api from "@/lib/api";
 import type { Conversation, ChatMessage } from "./types";
 import { cn } from "@/lib/utils";
-import { ZARYA_AI_RULES } from "@/lib/ai";
+import { NOVAX_AI_RULES } from "@/lib/ai";
 import Markdown from "@/components/ui/Markdown";
 
 export function extractAiText(res: { data?: unknown }): string {
@@ -91,7 +91,7 @@ export default function AiPanel({ messages, currentUserId, open, onClose, onUseS
 
     try {
       const res = await api.aiChat([
-        { role: "system", content: ZARYA_AI_RULES },
+        { role: "system", content: NOVAX_AI_RULES },
         { role: "user", content: prompt },
       ], 0.4);
       const text = extractAiText(res);
@@ -126,7 +126,7 @@ export default function AiPanel({ messages, currentUserId, open, onClose, onUseS
               <span className="w-6 h-6 rounded-full bg-gradient-to-br from-[#6C63FF] to-[#7C3AED] flex items-center justify-center ai-glow">
                 <Sparkles className="w-3.5 h-3.5 text-white" />
               </span>
-              ZARYA <span className="text-[10px] font-medium text-accent uppercase tracking-wider">AI Tools</span>
+              NOVAX <span className="text-[10px] font-medium text-accent uppercase tracking-wider">AI Tools</span>
             </h4>
             <button onClick={onClose} aria-label="Close AI tools" className="w-8 h-8 rounded-full tactile-icon-btn text-muted-foreground">
               <X className="w-4 h-4" />

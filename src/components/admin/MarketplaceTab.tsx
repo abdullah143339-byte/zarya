@@ -30,7 +30,7 @@ const PRODUCT_STATUS_MAP: Record<string, MarketplaceProductRow["status"]> = {
 const COUPONS_KEY = "novax_admin_coupons";
 
 const DEMO_COUPONS: CouponRow[] = [
-  { id: "cp1", code: "ZARYA10", description: "10% off orders over 500", discount: 10, type: "PERCENT", maxUses: 500, used: 0, expiresAt: new Date(Date.now() + 90 * 864e5).toISOString(), active: true },
+  { id: "cp1", code: "NOVAX10", description: "10% off orders over 500", discount: 10, type: "PERCENT", maxUses: 500, used: 0, expiresAt: new Date(Date.now() + 90 * 864e5).toISOString(), active: true },
   { id: "cp2", code: "WELCOME15", description: "15% off orders over 1000", discount: 15, type: "PERCENT", maxUses: 300, used: 0, expiresAt: new Date(Date.now() + 60 * 864e5).toISOString(), active: true },
   { id: "cp3", code: "LAUNCH25", description: "25% off orders over 2000", discount: 25, type: "PERCENT", maxUses: 100, used: 0, expiresAt: new Date(Date.now() + 30 * 864e5).toISOString(), active: false },
 ];

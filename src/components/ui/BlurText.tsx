@@ -8,17 +8,18 @@ import { EASE } from "@/components/landing/motion";
 
 interface BlurTextProps {
   text: string;
+  as?: "h1" | "h2";
   className?: string;
   highlightWords?: string[];
   highlightClassName?: string;
 }
 
-export default function BlurText({ text, className, highlightWords = [], highlightClassName = "" }: BlurTextProps) {
+export default function BlurText({ text, as: Tag = "h1", className, highlightWords = [], highlightClassName = "" }: BlurTextProps) {
   const reduced = useReducedMotion();
   const words = text.split(" ");
 
   return (
-    <h1 className={twMerge("flex flex-wrap justify-center gap-y-[0.1em]", className)}>
+    <Tag className={twMerge("flex flex-wrap justify-center gap-y-[0.1em]", className)}>
       {words.map((word, i) => {
         const isHighlight = highlightWords.includes(word);
         return (
@@ -30,11 +31,11 @@ export default function BlurText({ text, className, highlightWords = [], highlig
               transition={{ duration: 0.9, delay: i * 0.09, ease: EASE }}
               className={clsx("inline-block", isHighlight ? highlightClassName : "")}
             >
-              {word}
+              {word + (i < words.length - 1 ? " " : "")}
             </motion.span>
           </span>
         );
       })}
-    </h1>
+    </Tag>
   );
 }

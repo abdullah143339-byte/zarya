@@ -5,6 +5,8 @@ import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } fro
 import Button from "@/components/ui/Button";
 import BlurText from "@/components/ui/BlurText";
 import Atmosphere from "@/components/landing/Atmosphere";
+import StarField from "@/components/landing/StarField";
+import VideoBackground from "@/components/landing/VideoBackground";
 import { EASE } from "@/components/landing/motion";
 import {
   ArrowRight,
@@ -50,6 +52,8 @@ export default function Hero() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16"
     >
       <Atmosphere variant="hero" />
+      <VideoBackground src="/videos/hero-bg.mp4" />
+      <StarField />
 
       <motion.div
         style={parallaxOn ? { x: glow1X, y: glow1Y } : undefined}
@@ -61,7 +65,12 @@ export default function Hero() {
       />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <motion.div style={parallaxOn ? { x: contentX, y: contentY } : undefined} className="text-center max-w-4xl mx-auto">
+        <motion.div
+          style={{
+            ...(parallaxOn ? { x: contentX, y: contentY } : {}),
+          }}
+          className="relative text-center max-w-4xl mx-auto"
+        >
           <motion.div
             initial={{ opacity: 0, scale: 0.96, filter: "blur(8px)" }}
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
@@ -70,7 +79,7 @@ export default function Hero() {
             <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-8">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               <span className="text-sm text-muted-foreground">
-                ZARYA · Think Beyond Social
+                NOVAX · Think Beyond Social
               </span>
             </div>
           </motion.div>
@@ -86,9 +95,9 @@ export default function Hero() {
             initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.9, delay: 0.35, ease: EASE }}
-            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
+            className="text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto mb-10"
           >
-            ZARYA brings social networking, AI, communication, learning,
+            NOVAX brings social networking, AI, communication, learning,
             marketplace, and community together in one platform.
           </motion.p>
 
@@ -100,7 +109,7 @@ export default function Hero() {
           >
             <motion.div whileTap={reduced ? undefined : { scale: 0.97 }}>
               <Link href="/signup">
-                <Button size="lg" className="btn-premium">
+                <Button size="lg">
                   Start Your Journey
                   <ArrowRight className="w-4 h-4" />
                 </Button>
@@ -135,7 +144,7 @@ export default function Hero() {
                   {
                     icon: <Sparkles className="w-5 h-5" />,
                     title: "AI Assistant",
-                    desc: "Chat with ZARYA AI directly inside the app",
+                    desc: "Chat with NOVAX AI directly inside the app",
                     color: "from-amber-500 to-orange-500",
                   },
                   {
@@ -157,7 +166,7 @@ export default function Hero() {
                     >
                       {feature.icon}
                     </div>
-                    <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
+                    <h2 className="font-semibold text-foreground mb-1">{feature.title}</h2>
                     <p className="text-sm text-muted-foreground">{feature.desc}</p>
                   </motion.div>
                 ))}

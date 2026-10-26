@@ -47,7 +47,7 @@ export default function RecommendedPeople() {
     return (
       <div className="glass rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold text-foreground">Recommended People</h2>
+          <h2 className="text-base font-bold text-foreground">Recommended People</h2>
           <Users className="w-4 h-4 text-muted-foreground" />
         </div>
         <div className="flex justify-center py-4"><Loader2 className="w-5 h-5 text-primary animate-spin" /></div>
@@ -59,7 +59,7 @@ export default function RecommendedPeople() {
   return (
     <section className="glass rounded-2xl p-4" aria-label="Recommended people">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-bold text-foreground">Recommended People</h2>
+        <h2 className="text-base font-bold text-foreground">Recommended People</h2>
         <Users className="w-4 h-4 text-muted-foreground" />
       </div>
       <div className="space-y-3">
@@ -90,13 +90,13 @@ export default function RecommendedPeople() {
               <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => toggleFollow(u)}
-                  className={`h-8 px-3 rounded-lg text-xs font-medium flex items-center gap-1 transition-all ${u.isFollowing ? "bg-muted text-foreground hover:bg-muted/70" : "bg-gradient-primary text-white hover:scale-105"}`}
+                  className={`h-8 px-3 rounded-xl text-xs font-medium flex items-center gap-1 transition-all ${u.isFollowing ? "bg-muted text-foreground hover:bg-muted/70" : "bg-gradient-primary text-white hover:scale-105"}`}
                 >
                   {u.isFollowing ? <UserCheck className="w-3.5 h-3.5" /> : <UserPlus className="w-3.5 h-3.5" />}
                   {u.isFollowing ? "Following" : "Follow"}
                 </button>
                 <button onClick={() => setDismissed((prev) => new Set(prev).add(u.id))} aria-label={`Dismiss ${u.username}`}
-                  className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all">
+                  className="p-1.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-all">
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>

@@ -169,7 +169,7 @@ export class SecurityController {
     return { success: true, data };
   }
 
-  // ===== AI (Nova AI OS) =====
+  // ===== AI (NOVAX AI OS) =====
 
   @Get('ai/route')
   @ApiOperation({ summary: 'Get AI routing decision' })

@@ -39,7 +39,7 @@ export default function TrendingList() {
     return (
       <section className="glass rounded-2xl p-4" aria-label="Trending">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold text-foreground">Trending</h2>
+          <h2 className="text-base font-bold text-foreground">Trending</h2>
           <TrendingUp className="w-4 h-4 text-muted-foreground" />
         </div>
         <div className="flex justify-center py-4"><Loader2 className="w-5 h-5 text-primary animate-spin" /></div>
@@ -51,7 +51,7 @@ export default function TrendingList() {
   return (
     <section className="glass rounded-2xl p-4" aria-label="Trending">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-bold text-foreground">Trending</h2>
+        <h2 className="text-base font-bold text-foreground">Trending</h2>
         <TrendingUp className="w-4 h-4 text-muted-foreground" />
       </div>
       <ul className="space-y-1">

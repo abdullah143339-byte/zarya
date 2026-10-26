@@ -2,7 +2,19 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
 
-const backendDomain = "https://nova-ai-backend-production-d144.up.railway.app";
+// Keep CSP in sync with whichever backend the build points at.
+const defaultBackendDomain = "https://zarya.zarya.blitz.cloud";
+let backendDomain = defaultBackendDomain;
+try {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    backendDomain = new URL(process.env.NEXT_PUBLIC_API_URL).origin;
+  }
+} catch {
+  backendDomain = defaultBackendDomain;
+}
+const backendWsDomain = backendDomain
+  .replace(/^https:\/\//, "wss://")
+  .replace(/^http:\/\//, "ws://");
 
 const cspDirectives = [
   "default-src 'self'",
@@ -11,7 +23,7 @@ const cspDirectives = [
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: blob: https: http:",
   `media-src 'self' blob: http://localhost:8080 ${backendDomain}`,
-  `connect-src 'self' http://localhost:8080 http://localhost:3000 ${backendDomain} wss://${backendDomain.replace("https://", "")} https://accounts.google.com https://oauth2.googleapis.com https://www.googleapis.com ws: wss:`,
+  `connect-src 'self' http://localhost:8080 http://localhost:3000 ${backendDomain} ${backendWsDomain} https://accounts.google.com https://oauth2.googleapis.com https://www.googleapis.com ws: wss:`,
   "frame-src 'self' https://accounts.google.com https://apis.google.com",
   "object-src 'none'",
   "base-uri 'self'",

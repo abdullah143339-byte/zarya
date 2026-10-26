@@ -1,7 +1,7 @@
 {
-  "name": "zarya-backend",
+  "name": "novax-backend",
   "version": "1.0.0",
-  "description": "ZARYA Platform - Backend API Server",
+  "description": "NOVAX Platform - Backend API Server",
   "private": true,
   "scripts": {
     "build": "nest build",

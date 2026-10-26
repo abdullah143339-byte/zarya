@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
   imports: [
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET') || 'nova-ai-dev-secret-key-change-in-production',
+        secret: configService.get<string>('JWT_SECRET') || 'novax-dev-secret-key-change-in-production',
         signOptions: { expiresIn: '15m' },
       }),
       inject: [ConfigService],

@@ -23,7 +23,7 @@ function downloadInvoice(order: Order) {
     .map((l) => `${l.quantity} x ${l.title} @ ${formatPrice(l.price, order.currency)} = ${formatPrice(l.price * l.quantity, order.currency)}`)
     .join("\n");
   const text = [
-    `ZARYA Invoice`,
+    `NOVAX Invoice`,
     `Order: ${order.id}`,
     `Date: ${new Date(order.createdAt).toLocaleString()}`,
     `Status: ${order.status}`,
@@ -45,7 +45,7 @@ function downloadInvoice(order: Order) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `ZARYA-invoice-${order.id}.txt`;
+  a.download = `NOVAX-invoice-${order.id}.txt`;
   document.body.appendChild(a);
   a.click();
   a.remove();

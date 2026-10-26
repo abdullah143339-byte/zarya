@@ -57,7 +57,7 @@ export default function MarketplaceTab({ items, loading, isOwner }: MarketplaceT
                     <h4 className="text-xs font-medium text-foreground truncate">{item.title}</h4>
                     <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{item.shortDescription || item.description || item.category}</p>
                     <div className="flex items-center justify-between mt-2">
-                      <span className="text-sm font-bold" style={{ color: "var(--nova-accent, #6C63FF)" }}>{formatPrice(item.price)}</span>
+                      <span className="text-sm font-bold" style={{ color: "var(--novax-accent, #6C63FF)" }}>{formatPrice(item.price)}</span>
                       {rating !== null ? (
                         <span className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground">
                           <Star className="w-3 h-3 text-amber-400 fill-amber-400" /> {rating.toFixed(1)}

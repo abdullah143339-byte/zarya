@@ -228,7 +228,7 @@ export function ProjectDetailView({ id }: { id: string }) {
       const conv = await api.createConversation({ participantId: project.creator.id });
       const convId = (conv.data as { id?: string; conversation?: { id?: string } }).id || (conv.data as { conversation?: { id?: string } }).conversation?.id;
       if (!convId) throw new Error("No conversation id");
-      await api.sendMessage(convId, contactMsg.trim() || `Hi! I found your project "${project.title}" on ZARYA and would love to connect.`);
+      await api.sendMessage(convId, contactMsg.trim() || `Hi! I found your project "${project.title}" on NOVAX and would love to connect.`);
       setContactMsg("");
       alert("Message sent!");
     } catch {

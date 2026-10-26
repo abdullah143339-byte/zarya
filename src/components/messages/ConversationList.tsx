@@ -217,11 +217,11 @@ export default function ConversationList({
             }}
           >
             <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center ai-glow overflow-hidden shrink-0">
-              <img src="/zarya.png" alt="ZARYA" className="w-full h-full object-cover" />
+              <img src="/novax.png" alt="NOVAX" className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-foreground flex items-center gap-1.5 truncate">
-                ZARYA AI Assistant
+                NOVAX AI Assistant
                 <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#6C63FF]/15 text-accent font-bold uppercase tracking-wide shrink-0">AI</span>
               </p>
               <p className="text-xs text-muted-foreground truncate">Ask anything, get instant answers</p>

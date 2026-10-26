@@ -157,7 +157,7 @@ export default function MarketplacePage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">ZARYA Marketplace</h1>
+          <h1 className="text-2xl font-bold text-foreground">NOVAX Marketplace</h1>
           <p className="text-sm text-muted-foreground mt-1">Buy and sell digital products for creators, by creators.</p>
         </div>
         {activeTab !== "sell" && (
@@ -350,7 +350,7 @@ export default function MarketplacePage() {
               </div>
               <h2 className="text-xl font-semibold text-foreground">List Your Product</h2>
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                Sell templates, courses, AI models, and more to the ZARYA community.
+                Sell templates, courses, AI models, and more to the NOVAX community.
               </p>
               <Button onClick={() => setShowSellForm(true)}><Plus className="w-4 h-4" /> Create Listing</Button>
             </div>

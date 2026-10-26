@@ -80,21 +80,32 @@ export class PostsService {
     return { posts: enrichedPosts, total, page, totalPages: Math.ceil(total / limit) };
   }
 
-  async getFeed(userId: string, page = 1, limit = 20) {
+  async getFeed(userId: string, page = 1, limit = 20, type?: string, category?: string) {
     const skip = (page - 1) * limit;
     const following = await this.prisma.follow.findMany({
       where: { followerId: userId },
       select: { followingId: true },
     });
     const followingIds = following.map((f) => f.followingId);
+    const normalizedType = (type || '').toUpperCase();
     const where: any = {
       deletedAt: null,
       publishedAt: { lte: new Date() },
-      OR: [
+    };
+    if (['TEXT', 'IMAGE', 'VIDEO', 'AUDIO', 'POLL'].includes(normalizedType)) {
+      where.type = normalizedType;
+    }
+    if (category === 'Following') {
+      where.authorId = { in: followingIds };
+    } else {
+      where.OR = [
         { authorId: { in: followingIds } },
         { visibility: 'PUBLIC' },
-      ],
-    };
+      ];
+    }
+    const orderBy: any = category === 'Trending'
+      ? [{ reactionsCount: 'desc' as const }, { createdAt: 'desc' as const }]
+      : { createdAt: 'desc' as const };
 
     const [posts, total] = await Promise.all([
       this.prisma.post.findMany({
@@ -104,7 +115,7 @@ export class PostsService {
           author: { select: { id: true, username: true, displayName: true, avatar: true } },
           _count: { select: { comments: true, shares: true } },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy,
       }),
       this.prisma.post.count({ where }),
     ]);

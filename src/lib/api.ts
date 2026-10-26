@@ -190,8 +190,8 @@ class ApiClient {
 
   // Reels
   getReelsFeed(category: string, page = 1, limit = 8) {
-    // TODO(backend): `/posts/feed` ignores the `category` filter server-side. Wire it up when the
-    // discovery endpoints (following/trending/nearby/ai-picks) are added.
+    // Server filters by `type`; `category=Following` limits to followed accounts and
+    // `category=Trending` sorts by reactions. Other categories use the default feed order.
     return this.get(`/posts/feed?page=${page}&limit=${limit}&type=VIDEO&category=${encodeURIComponent(category)}`);
   }
   // Public, no-auth reels feed for the landing page (guests).
@@ -243,6 +243,7 @@ class ApiClient {
   // Share
   sharePost(postId: string, platform?: string) { return this.post(`/posts/${postId}/share`, { platform }); }
   reportPost(postId: string, reason: string, description?: string) { return this.post(`/posts/${postId}/report`, { reason, description }); }
+  recordPostView(postId: string) { return this.post(`/posts/${postId}/view`); }
 
   // Notifications
   getNotifications(page = 1) { return this.get(`/notifications?page=${page}`); }

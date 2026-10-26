@@ -38,7 +38,7 @@ export default function ReelShare({ reel, onClose, onShared }: ReelShareProps) {
   const shareExternal = async () => {
     try {
       if (navigator.share) {
-        await navigator.share({ title: "Check out this reel on ZARYA", url: reelUrl });
+        await navigator.share({ title: "Check out this reel on NOVAX", url: reelUrl });
       } else {
         await copyLink();
       }

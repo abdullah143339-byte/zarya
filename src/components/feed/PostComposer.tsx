@@ -256,7 +256,7 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-pink-500" />
-                  Generate with ZARYA
+                  Generate with NOVAX
                 </h3>
                 <button onClick={() => setAiModal(false)} className="p-1.5 rounded-lg hover:bg-muted" aria-label="Close">
                   <X className="w-5 h-5" />

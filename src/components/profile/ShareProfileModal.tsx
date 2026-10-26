@@ -30,7 +30,7 @@ export default function ShareProfileModal({ open, onClose, username, notify }: S
   };
 
   const shareToTwitter = () => {
-    const text = encodeURIComponent(`Check out ${username} on ZARYA`);
+    const text = encodeURIComponent(`Check out ${username} on NOVAX`);
     window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`, "_blank", "noopener,noreferrer");
     onClose();
   };

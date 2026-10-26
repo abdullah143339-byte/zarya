@@ -108,7 +108,7 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (tab: AdminTa
         <SectionHeading
           icon={<Activity className="w-4 h-4 text-primary" />}
           title="Platform Overview"
-          subtitle="Live metrics from the ZARYA control plane"
+          subtitle="Live metrics from the NOVAX control plane"
         />
         <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground glass rounded-lg px-3 py-1.5">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />

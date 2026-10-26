@@ -51,6 +51,8 @@ export default function UploadReel({ open, onClose, onUploaded }: UploadReelProp
     window.setTimeout(() => {
       setClosing(false);
       onClose();
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      if (thumbPreview) URL.revokeObjectURL(thumbPreview);
       setVideo(null);
       setThumbnail(null);
       setPreviewUrl(null);
@@ -86,19 +88,35 @@ export default function UploadReel({ open, onClose, onUploaded }: UploadReelProp
     setThumbPreview(URL.createObjectURL(file));
   };
 
+  const probeDuration = (src: string): Promise<number> =>
+    new Promise((resolve) => {
+      if (!src) { resolve(0); return; }
+      const probe = document.createElement("video");
+      probe.preload = "metadata";
+      let settled = false;
+      const finish = (value: number) => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timer);
+        probe.onloadedmetadata = null;
+        probe.onerror = null;
+        probe.removeAttribute("src");
+        probe.load();
+        resolve(Number.isFinite(value) ? value : 0);
+      };
+      const timer = window.setTimeout(() => finish(0), 8000);
+      probe.onloadedmetadata = () => finish(probe.duration);
+      probe.onerror = () => finish(0);
+      probe.src = src;
+    });
+
   const submit = async () => {
     if (!video) { setError("Please choose a video first."); return; }
     setError("");
     setUploading(true);
     setProgress(0);
 
-    const probe = document.createElement("video");
-    probe.src = previewUrl || "";
-    try {
-      await new Promise((resolve) => { probe.onloadedmetadata = resolve; });
-    } catch { /* duration unavailable, skip validation */ }
-    const duration = Math.round(probe.duration || 0);
-    URL.revokeObjectURL(probe.src);
+    const duration = Math.round(await probeDuration(previewUrl || ""));
 
     if (duration > 300) {
       setUploading(false);

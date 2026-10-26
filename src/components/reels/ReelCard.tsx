@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Loader2, Trash2, Link2, X, Check } from "lucide-react";
+import { Sparkles, Loader2, Trash2, Link2, X, Check, Flag, EyeOff } from "lucide-react";
 import ReelPlayer from "./ReelPlayer";
 import ReelActionRail from "./ReelActionRail";
 import ReelInfo from "./ReelInfo";
@@ -11,13 +11,19 @@ import ReelShare from "./ReelShare";
 import api from "@/lib/api";
 import type { Reel } from "./types";
 
+const REPORT_REASONS = ["Inappropriate", "Spam", "Misleading", "Harassment", "Other"];
+
 interface ReelCardProps {
   reel: Reel;
   active: boolean;
   currentUserId?: string;
   preload?: "none" | "metadata" | "auto";
   requireAuth?: boolean;
-  onRequireAuth?: (action: "like" | "comment" | "bookmark" | "profile") => void;
+  onRequireAuth?: (action: "like" | "comment" | "bookmark" | "profile" | "follow") => void;
+  muted?: boolean;
+  onToggleMute?: () => void;
+  playerRef?: React.Ref<HTMLVideoElement>;
+  onNotInterested?: () => void;
   onLike: () => void;
   onBookmark: () => void;
   onCommented: () => void;
@@ -25,7 +31,7 @@ interface ReelCardProps {
   onDelete: () => void;
 }
 
-export default function ReelCard({ reel, active, currentUserId, preload = "metadata", requireAuth = false, onRequireAuth, onLike, onBookmark, onCommented, onShared, onDelete }: ReelCardProps) {
+export default function ReelCard({ reel, active, currentUserId, preload = "metadata", requireAuth = false, onRequireAuth, muted, onToggleMute, playerRef, onNotInterested, onLike, onBookmark, onCommented, onShared, onDelete }: ReelCardProps) {
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -34,6 +40,9 @@ export default function ReelCard({ reel, active, currentUserId, preload = "metad
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [longPaused, setLongPaused] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportBusy, setReportBusy] = useState(false);
+  const [reportDone, setReportDone] = useState(false);
   const longPressTimer = useRef<number | null>(null);
 
   const videoUrl = reel.media?.find((m) => m.type !== "THUMBNAIL")?.url || reel.media?.[0]?.url;
@@ -41,13 +50,28 @@ export default function ReelCard({ reel, active, currentUserId, preload = "metad
 
   const isOwner = !!currentUserId && reel.author.id === currentUserId;
 
-  const gate = (action: "like" | "comment" | "bookmark" | "profile") => {
+  const gate = (action: "like" | "comment" | "bookmark" | "profile" | "follow") => {
     if (requireAuth && onRequireAuth) {
       onRequireAuth(action);
       return true;
     }
     return false;
   };
+
+  useEffect(() => {
+    if (!commentsOpen && !shareOpen && !moreOpen && !aiOpen) return;
+    const onEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setCommentsOpen(false);
+        setShareOpen(false);
+        setMoreOpen(false);
+        setAiOpen(false);
+        setReportOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onEsc);
+    return () => window.removeEventListener("keydown", onEsc);
+  }, [commentsOpen, shareOpen, moreOpen, aiOpen]);
 
   const openComments = () => {
     if (gate("comment")) return;
@@ -79,6 +103,19 @@ export default function ReelCard({ reel, active, currentUserId, preload = "metad
     } catch { /* clipboard unavailable */ }
   };
 
+  const submitReport = async (reason: string) => {
+    if (reportBusy) return;
+    setReportBusy(true);
+    try {
+      await api.reportPost(reel.id, reason);
+      setReportDone(true);
+    } catch {
+      /* keep list for retry */
+    } finally {
+      setReportBusy(false);
+    }
+  };
+
   const handleTouchStart = () => {
     longPressTimer.current = window.setTimeout(() => setLongPaused(true), 600);
   };
@@ -94,9 +131,14 @@ export default function ReelCard({ reel, active, currentUserId, preload = "metad
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchEnd}
     >
-      <ReelPlayer src={videoUrl || ""} poster={posterUrl} active={active} paused={longPaused} onDoubleTap={onLike} preload={active ? "auto" : preload} />
+      <ReelPlayer ref={playerRef} src={videoUrl || ""} poster={posterUrl} active={active} paused={longPaused} muted={muted} onToggleMute={onToggleMute} onDoubleTap={onLike} preload={active ? "auto" : preload} />
 
-      <ReelInfo reel={reel} onProfile={() => { if (gate("profile")) return; window.location.href = `/dashboard/profile?u=${reel.author.username}`; }} />
+      <ReelInfo
+        reel={reel}
+        onProfile={() => { if (gate("profile")) return; window.location.href = `/dashboard/profile?u=${reel.author.username}`; }}
+        currentUserId={currentUserId}
+        onFollowAuth={() => { gate("follow"); setMoreOpen(false); }}
+      />
 
       <ReelActionRail
         reel={reel}
@@ -144,22 +186,61 @@ export default function ReelCard({ reel, active, currentUserId, preload = "metad
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
-            className="absolute right-3 bottom-20 z-30 glass-strong rounded-2xl p-1.5 min-w-[160px]"
+            className="absolute right-3 bottom-20 z-30 glass-strong rounded-2xl p-1.5 min-w-[180px]"
           >
-            <button
-              onClick={copyLink}
-              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-foreground hover:bg-muted transition-colors"
-            >
-              {copied ? <Check className="w-4 h-4 text-primary" /> : <Link2 className="w-4 h-4 text-muted-foreground" />}
-              {copied ? "Copied" : "Copy link"}
-            </button>
-            {isOwner && (
-              <button
-                onClick={onDelete}
-                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-red-500 hover:bg-red-500/10 transition-colors"
-              >
-                <Trash2 className="w-4 h-4" /> Delete reel
-              </button>
+            {reportOpen ? (
+              <>
+                <div className="px-3 py-2 text-xs font-bold text-muted-foreground uppercase tracking-wide">
+                  {reportDone ? "Reported" : "Report reason"}
+                </div>
+                {reportDone ? (
+                  <div className="flex items-center gap-2 px-3 py-2.5 text-sm text-foreground">
+                    <Check className="w-4 h-4 text-primary" /> Thanks for your report
+                  </div>
+                ) : (
+                  REPORT_REASONS.map((r) => (
+                    <button
+                      key={r}
+                      onClick={() => submitReport(r)}
+                      disabled={reportBusy}
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-foreground hover:bg-muted transition-colors disabled:opacity-50"
+                    >
+                      {reportBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Flag className="w-4 h-4 text-muted-foreground" />}
+                      {r}
+                    </button>
+                  ))
+                )}
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={copyLink}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-foreground hover:bg-muted transition-colors"
+                >
+                  {copied ? <Check className="w-4 h-4 text-primary" /> : <Link2 className="w-4 h-4 text-muted-foreground" />}
+                  {copied ? "Copied" : "Copy link"}
+                </button>
+                <button
+                  onClick={() => { setMoreOpen(false); onNotInterested?.(); }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-foreground hover:bg-muted transition-colors"
+                >
+                  <EyeOff className="w-4 h-4 text-muted-foreground" /> Not interested
+                </button>
+                <button
+                  onClick={() => setReportOpen(true)}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-red-500 hover:bg-red-500/10 transition-colors"
+                >
+                  <Flag className="w-4 h-4" /> Report
+                </button>
+                {isOwner && (
+                  <button
+                    onClick={onDelete}
+                    className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-red-500 hover:bg-red-500/10 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" /> Delete reel
+                  </button>
+                )}
+              </>
             )}
           </motion.div>
         )}

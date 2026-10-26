@@ -102,7 +102,7 @@ export default function CheckoutPage() {
         </div>
         <h1 className="text-2xl font-bold text-foreground">Order Confirmed!</h1>
         <p className="text-sm text-muted-foreground mt-2">
-          Thank you for shopping with ZARYA Market. Your order <span className="font-semibold text-foreground">{orderId}</span> is
+          Thank you for shopping with NOVAX Market. Your order <span className="font-semibold text-foreground">{orderId}</span> is
           being processed.
         </p>
         <div className="flex items-center justify-center gap-3 mt-6">

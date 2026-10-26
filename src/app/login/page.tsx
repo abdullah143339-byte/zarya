@@ -190,7 +190,7 @@ export default function LoginPage() {
       <div className="relative z-10 flex w-full max-w-[1400px] mx-auto">
         <aside className="hidden lg:flex w-1/2 flex-col justify-between p-12 xl:p-16">
           <div>
-            <Link href="/" className="inline-flex items-center gap-3 group" aria-label="ZARYA home">
+            <Link href="/" className="inline-flex items-center gap-3 group" aria-label="NOVAX home">
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -200,7 +200,7 @@ export default function LoginPage() {
                 <Logo size={48} rounded="rounded-2xl" />
               </motion.div>
               <span className="text-2xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors">
-                ZARYA
+                NOVAX
                 <span className="block mt-0.5 text-[11px] font-medium tracking-[0.15em] uppercase text-white/40">Think Beyond Social</span>
               </span>
             </Link>
@@ -225,7 +225,7 @@ export default function LoginPage() {
               className="mt-5 text-lg text-white/60 max-w-md"
             >
               Sign in to explore your feed, collaborate on projects and command
-              your personal AI across the ZARYA ecosystem.
+              your personal AI across the NOVAX ecosystem.
             </motion.p>
 
             <div className="mt-10 grid grid-cols-1 gap-4 max-w-md">
@@ -255,7 +255,7 @@ export default function LoginPage() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-xs text-white/35"
           >
-            © {new Date().getFullYear()} ZARYA · Think Beyond Social. Crafted with intelligence.
+            © {new Date().getFullYear()} NOVAX · Think Beyond Social. Crafted with intelligence.
           </motion.p>
         </aside>
 
@@ -271,9 +271,9 @@ export default function LoginPage() {
               style={{ background: "rgba(23, 27, 34, 0.85)" }}
             >
               <div className="lg:hidden mb-8 text-center">
-                <Link href="/" className="inline-flex items-center gap-2.5" aria-label="ZARYA home">
+                <Link href="/" className="inline-flex items-center gap-2.5" aria-label="NOVAX home">
                   <Logo size={40} rounded="rounded-xl" />
-                  <span className="text-xl font-bold tracking-tight text-white">ZARYA</span>
+                  <span className="text-xl font-bold tracking-tight text-white">NOVAX</span>
                 </Link>
               </div>
 

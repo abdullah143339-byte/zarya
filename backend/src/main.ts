@@ -76,8 +76,8 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('ZARYA API')
-    .setDescription('ZARYA · Think Beyond Social — AI-First Social Media Ecosystem')
+    .setTitle('NOVAX API')
+    .setDescription('NOVAX · Think Beyond Social — AI-First Social Media Ecosystem')
     .setVersion('1.0')
     .addBearerAuth()
     .addTag('Authentication', 'User authentication & session management')
@@ -87,7 +87,7 @@ async function bootstrap() {
     .addTag('Communities', 'Community management')
     .addTag('Marketplace', 'Digital marketplace')
     .addTag('Learning', 'Personal Learning Hub workspace')
-    .addTag('AI', 'ZARYA assistant & agents')
+    .addTag('AI', 'NOVAX assistant & agents')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -102,7 +102,7 @@ async function bootstrap() {
 
   const port = configService.get<number>('APP_PORT') || 8080;
   await app.listen(port);
-  console.log(`🚀 ZARYA Backend running on http://localhost:${port}`);
+  console.log(`🚀 NOVAX Backend running on http://localhost:${port}`);
   console.log(`📚 API Docs: http://localhost:${port}/docs`);
 }
 

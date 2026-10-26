@@ -175,7 +175,7 @@ export default function StoryStrip() {
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
           aria-label="Add story"
-          className="group flex flex-col items-center gap-1.5 shrink-0 w-[68px] disabled:opacity-60"
+          className="group flex flex-col items-center gap-2.5 shrink-0 w-[68px] disabled:opacity-60"
         >
           <span className="relative w-14 h-14 rounded-full bg-muted flex items-center justify-center text-sm font-bold text-foreground border-2 border-dashed border-border transition-all group-hover:border-primary group-hover:scale-105">
             {user?.avatar ? (

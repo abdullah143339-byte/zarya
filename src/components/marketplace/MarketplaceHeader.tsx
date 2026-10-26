@@ -56,7 +56,7 @@ export default function MarketplaceHeader() {
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <span className="hidden md:block">
-            <span className="block text-sm font-bold text-gradient leading-none">ZARYA Market</span>
+            <span className="block text-sm font-bold text-gradient leading-none">NOVAX Market</span>
             <span className="block text-[9px] text-muted-foreground mt-0.5">Shop · Sell · Earn</span>
           </span>
         </Link>

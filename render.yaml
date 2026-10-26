@@ -13,7 +13,7 @@ services:
     numInstances: 1
     envVars:
       - key: APP_NAME
-        value: zarya
+        value: novax
       - key: APP_PORT
         value: 8080
       - key: NODE_ENV
@@ -71,4 +71,4 @@ services:
       - key: SMTP_PORT
         value: "465"
       - key: SMTP_FROM
-        value: ZARYA <noreply@zarya.app>
+        value: NOVAX <noreply@novax.app>

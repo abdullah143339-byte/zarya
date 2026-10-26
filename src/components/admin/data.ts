@@ -134,7 +134,7 @@ export const ADMIN_ROLES: AdminRole[] = [
     id: "SUPER_ADMIN",
     name: "Super Admin",
     tagline: "Full platform access",
-    description: "Unrestricted access to every module, resource and configuration across ZARYA.",
+    description: "Unrestricted access to every module, resource and configuration across NOVAX.",
     color: "#8b5cf6",
     emoji: "👑",
     system: true,
@@ -288,7 +288,7 @@ export function can(roleId: string | undefined, permission: string): boolean {
 
 export function seedSettings(): SystemSetting[] {
   return [
-    { key: "site_name", group: "general", label: "Platform name", description: "Display name shown across the platform", type: "text", value: "ZARYA" },
+    { key: "site_name", group: "general", label: "Platform name", description: "Display name shown across the platform", type: "text", value: "NOVAX" },
     { key: "site_tagline", group: "general", label: "Platform tagline", description: "Tagline shown across the platform", type: "text", value: "Think Beyond Social" },
     { key: "allow_registration", group: "general", label: "Open registration", description: "Allow new users to sign up without invites", type: "toggle", value: true },
     { key: "maintenance_mode", group: "general", label: "Maintenance mode", description: "Show a maintenance screen to non-admins", type: "toggle", value: false },

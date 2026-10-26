@@ -99,9 +99,9 @@ function ResetPasswordForm() {
         style={{ background: "rgba(23, 27, 34, 0.85)" }}
       >
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2.5 mb-6" aria-label="ZARYA home">
+          <Link href="/" className="inline-flex items-center gap-2.5 mb-6" aria-label="NOVAX home">
             <Logo size={40} rounded="rounded-xl" />
-            <span className="text-xl font-bold tracking-tight text-white">ZARYA</span>
+            <span className="text-xl font-bold tracking-tight text-white">NOVAX</span>
           </Link>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Set a new password</h1>
           <p className="text-sm text-white/50 mt-1.5">Choose a strong password for your account</p>

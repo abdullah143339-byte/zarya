@@ -132,7 +132,7 @@ export default function ProductDetailClient() {
   const handleShare = () => {
     const url = window.location.href;
     if (navigator.share) {
-      navigator.share({ title: item?.title ?? "ZARYA Market", url }).catch(() => {});
+      navigator.share({ title: item?.title ?? "NOVAX Market", url }).catch(() => {});
     } else {
       window.navigator.clipboard?.writeText(url).then(() => notify("Link copied to clipboard", "info")).catch(() => {});
     }
@@ -275,7 +275,7 @@ export default function ProductDetailClient() {
               <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
               <div>
                 <p className="text-xs font-medium text-foreground">Secure Payment</p>
-                <p className="text-[10px] text-muted-foreground">Protected by ZARYA Pay</p>
+                <p className="text-[10px] text-muted-foreground">Protected by NOVAX Pay</p>
               </div>
             </div>
             <div className="flex items-start gap-2 rounded-xl bg-muted/40 p-3">
@@ -350,7 +350,7 @@ export default function ProductDetailClient() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                  ZARYA Seller
+                  NOVAX Seller
                   <BadgeCheck className="w-3.5 h-3.5 text-primary" />
                 </p>
                 <p className="text-[11px] text-muted-foreground">{item.sellerId ? `Seller ID: ${item.sellerId}` : "Verified marketplace seller"}</p>

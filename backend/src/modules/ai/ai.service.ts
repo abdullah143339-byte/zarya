@@ -5,7 +5,7 @@ import { NovaAiOsService } from '../../common/services/nova-ai-os.service';
 export class AiService {
   constructor(private novaAi: NovaAiOsService) {}
 
-  async createConversation(userId: string, title?: string, model = 'nova-7b') {
+  async createConversation(userId: string, title?: string, model = 'novax-7b') {
     return this.novaAi.createConversation(userId, title);
   }
 
